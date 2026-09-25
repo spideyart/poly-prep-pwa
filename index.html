@@ -28,6 +28,9 @@
   <script type="text/babel">
     const { useState, useEffect } = React;
 
+const { useState, useEffect } = React;
+
+// (Keep your existing 'data' object here with the semesters, branches, and content)
 const data = {
   semesters: [
     { id: "1yr", name: "1st Year" },
@@ -43,30 +46,30 @@ const data = {
     { id: "eee", short: "EEE" }
   ],
   content: [
-    // --- 1st Year Subjects[span_0](start_span)[span_0](end_span) ---
-    { id: 101, semester: "1yr", branchId: "cse", code: "CM-101", name: "English-I", pyqLink: "https://drive.google.com/file/d/1-uJKy1KZAxJgMx7RV-j_JfS8gZezRamr/view?usp=drivesdk", notesLink: "#" },
+    // 1st Year Subjects
+    { id: 101, semester: "1yr", branchId: "cse", code: "CM-101", name: "English-I", pyqLink: "#", notesLink: "#" },
     { id: 102, semester: "1yr", branchId: "cse", code: "CM-102", name: "Engineering Mathematics-I", pyqLink: "#", notesLink: "#" },
     { id: 103, semester: "1yr", branchId: "cse", code: "CM-103", name: "Engineering Physics", pyqLink: "#", notesLink: "#" },
     { id: 104, semester: "1yr", branchId: "cse", code: "CM-104", name: "Engineering Chemistry and Environmental studies", pyqLink: "#", notesLink: "#" },
     { id: 105, semester: "1yr", branchId: "cse", code: "CM-105", name: "Basics of Computer Engineering", pyqLink: "#", notesLink: "#" },
     { id: 106, semester: "1yr", branchId: "cse", code: "CM-106", name: "Programming in C", pyqLink: "#", notesLink: "#" },
 
-    // --- III Semester Subjects[span_1](start_span)[span_1](end_span) ---
+    // III Semester Subjects
     { id: 301, semester: "3", branchId: "cse", code: "CM-301", name: "Mathematics - II", pyqLink: "#", notesLink: "#" },
     { id: 302, semester: "3", branchId: "cse", code: "CM-302", name: "Digital Electronics", pyqLink: "#", notesLink: "#" },
     { id: 303, semester: "3", branchId: "cse", code: "CM-303", name: "Operating systems", pyqLink: "#", notesLink: "#" },
     { id: 304, semester: "3", branchId: "cse", code: "CM-304", name: "Data Structures through C", pyqLink: "#", notesLink: "#" },
     { id: 305, semester: "3", branchId: "cse", code: "CM-305", name: "DBMS", pyqLink: "#", notesLink: "#" },
 
-    // --- IV Semester Subjects[span_2](start_span)[span_2](end_span) ---
+    // IV Semester Subjects
     { id: 401, semester: "4", branchId: "cse", code: "CM-401", name: "Software Engineering", pyqLink: "#", notesLink: "#" },
     { id: 402, semester: "4", branchId: "cse", code: "CM-402", name: "Web Technologies", pyqLink: "#", notesLink: "#" },
     { id: 403, semester: "4", branchId: "cse", code: "CM-403", name: "Computer Organization And Microprocessors", pyqLink: "#", notesLink: "#" },
     { id: 404, semester: "4", branchId: "cse", code: "CM-404", name: "OOP through Java", pyqLink: "#", notesLink: "#" },
     { id: 405, semester: "4", branchId: "cse", code: "CM-405", name: "Computer Networks &Cyber Security", pyqLink: "#", notesLink: "#" },
 
-    // --- V Semester Subjects[span_3](start_span)[span_3](end_span) ---
-    { id: 501, semester: "5", branchId: "cse", code: "CM-501", name: "Industrial Management and Entrepreneurship", pyqLink: "#", notesLink: "https://drive.google.com/file/d/1dB5eprqI3k2gchMQ-e-inek1VQJeXiR7/view?usp=drivesdk" },
+    // V Semester Subjects
+    { id: 501, semester: "5", branchId: "cse", code: "CM-501", name: "Industrial Management and Entrepreneurship", pyqLink: "#", notesLink: "https://drive.google.com/your-link-here" },
     { id: 502, semester: "5", branchId: "cse", code: "CM-502", name: "Big Data & Cloud Computing", pyqLink: "#", notesLink: "#" },
     { id: 503, semester: "5", branchId: "cse", code: "CM-503", name: "Android Programming", pyqLink: "#", notesLink: "#" },
     { id: 504, semester: "5", branchId: "cse", code: "CM-504", name: "Internet Of Things", pyqLink: "#", notesLink: "#" },
@@ -74,14 +77,13 @@ const data = {
   ]
 };
 
-
 function App() {
   const [darkMode, setDarkMode] = useState(true);
   const [activeBranch, setActiveBranch] = useState('cse');
   const [activeSem, setActiveSem] = useState('3');
   const [searchQuery, setSearchQuery] = useState('');
   
-  // New state to control which screen is visible
+  // View states: 'home', 'pyqs', or 'notes'
   const [view, setView] = useState('home'); 
 
   useEffect(() => {
@@ -106,47 +108,60 @@ function App() {
       
       {/* --- HOME SCREEN --- */}
       {view === 'home' && (
-        <div className="flex-1 flex flex-col items-center justify-center p-6 text-center relative">
-          {/* Theme Toggle on Home Screen */}
+        <div className="flex-1 flex flex-col p-6 relative justify-center">
           <div className="absolute top-4 right-4">
             <button onClick={() => setDarkMode(!darkMode)} className="p-2 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300">
               <i data-lucide={darkMode ? "sun" : "moon"}></i>
             </button>
           </div>
           
-          <div className="w-24 h-24 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-3xl flex items-center justify-center mb-6 shadow-sm">
-            <i data-lucide="book-open" className="w-12 h-12"></i>
+          <div className="text-center mb-10 mt-8">
+            <div className="w-24 h-24 mx-auto bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-3xl flex items-center justify-center mb-6 shadow-sm">
+              <i data-lucide="book-open" className="w-12 h-12"></i>
+            </div>
+            <h1 className="text-4xl font-extrabold text-gray-900 dark:text-white mb-3 tracking-tight">PolyPrep</h1>
+            <p className="text-gray-500 dark:text-gray-400 text-sm leading-relaxed px-4">
+              The zero-bloat study portal for GIET Polytechnic students.
+            </p>
           </div>
-          <h1 className="text-4xl font-extrabold text-gray-900 dark:text-white mb-3 tracking-tight">PolyPrep</h1>
-          <p className="text-gray-500 dark:text-gray-400 mb-10 text-sm leading-relaxed px-4">
-            The zero-bloat study portal for GIET Polytechnic students. Instant access to syllabus notes and past papers.
-          </p>
           
-          <button 
-            onClick={() => {
-              setView('subjects');
-              window.scrollTo(0, 0);
-            }} 
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-4 rounded-2xl transition-all active:scale-95 shadow-lg shadow-blue-600/30 flex items-center justify-center gap-2"
-          >
-            <span>Browse Subjects</span>
-            <i data-lucide="arrow-right" className="w-5 h-5"></i>
-          </button>
+          <div className="space-y-4 w-full">
+            <button 
+              onClick={() => { setView('notes'); window.scrollTo(0,0); }}
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-5 px-4 rounded-2xl transition-all active:scale-95 shadow-lg shadow-blue-600/30 flex items-center justify-between"
+            >
+              <div className="flex items-center gap-3">
+                <i data-lucide="book" className="w-6 h-6"></i>
+                <span className="text-lg">Study Notes</span>
+              </div>
+              <i data-lucide="arrow-right" className="w-5 h-5 opacity-80"></i>
+            </button>
+
+            <button 
+              onClick={() => { setView('pyqs'); window.scrollTo(0,0); }}
+              className="w-full bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-900 dark:text-white font-semibold py-5 px-4 rounded-2xl transition-all active:scale-95 shadow-sm flex items-center justify-between border dark:border-gray-200 dark:border-gray-700"
+            >
+              <div className="flex items-center gap-3">
+                <i data-lucide="file-text" className="w-6 h-6"></i>
+                <span className="text-lg">Previous Papers</span>
+              </div>
+              <i data-lucide="arrow-right" className="w-5 h-5 opacity-80"></i>
+            </button>
+          </div>
         </div>
       )}
 
-      {/* --- SUBJECTS SCREEN --- */}
-      {view === 'subjects' && (
+      {/* --- DIRECTORY SCREEN (Notes or PYQs) --- */}
+      {(view === 'notes' || view === 'pyqs') && (
         <>
           <header className="sticky top-0 z-10 bg-white dark:bg-gray-900 border-b dark:border-gray-800 pt-4">
             <div className="flex justify-between items-center px-4 mb-4">
               <div className="flex items-center gap-3">
-                {/* Back Button */}
                 <button onClick={() => setView('home')} className="p-2 -ml-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-300 transition-colors">
                   <i data-lucide="arrow-left" className="w-5 h-5"></i>
                 </button>
                 <h1 className="text-xl font-bold text-blue-600 dark:text-blue-400 flex items-center gap-2">
-                  PolyPrep
+                  {view === 'notes' ? 'Study Notes' : 'Previous Papers'}
                 </h1>
               </div>
               <button onClick={() => setDarkMode(!darkMode)} className="p-2 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300">
@@ -159,7 +174,7 @@ function App() {
               <i data-lucide="search" className="absolute left-7 top-2.5 w-4 h-4 text-gray-400"></i>
               <input 
                 type="text" 
-                placeholder="Search subjects or codes..." 
+                placeholder={`Search ${view === 'notes' ? 'notes' : 'papers'}...`}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-xl py-2 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -205,32 +220,34 @@ function App() {
               {filteredSubjects.length > 0 ? (
                 filteredSubjects.map(subject => (
                   <div key={subject.id} className="p-4 rounded-2xl border dark:border-gray-800 bg-white dark:bg-gray-800/50 shadow-sm">
-                    <div className="flex justify-between items-start mb-2">
+                    <div className="flex justify-between items-start mb-4">
                       <h3 className="font-semibold text-gray-900 dark:text-white pr-2">{subject.name}</h3>
                       <span className="text-xs font-mono bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 px-2 py-1 rounded whitespace-nowrap">
                         {subject.code}
                       </span>
                     </div>
-                    <div className="grid grid-cols-2 gap-2 mt-4">
-                      <a href={subject.pyqLink} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2 bg-gray-50 dark:bg-gray-700/50 py-2 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
-                        <i data-lucide="file-text" className="w-4 h-4"></i> PYQs
+                    
+                    {/* Conditionally Render Only the Relevant Button */}
+                    {view === 'notes' ? (
+                      <a href={subject.notesLink} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2 w-full bg-blue-50 dark:bg-blue-900/20 py-2.5 rounded-xl text-sm font-medium text-blue-700 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/40 transition-colors">
+                        <i data-lucide="book" className="w-4 h-4"></i> Open Notes
                       </a>
-                      <a href={subject.notesLink} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2 bg-gray-50 dark:bg-gray-700/50 py-2 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
-                        <i data-lucide="download" className="w-4 h-4"></i> Notes
+                    ) : (
+                      <a href={subject.pyqLink} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2 w-full bg-gray-50 dark:bg-gray-700/50 py-2.5 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
+                        <i data-lucide="file-text" className="w-4 h-4"></i> View Past Papers
                       </a>
-                    </div>
+                    )}
                   </div>
                 ))
               ) : (
                 <div className="text-center py-8 text-gray-500 dark:text-gray-400">
-                  No subjects found for {data.semesters.find(s => s.id === activeSem)?.name}.
+                  No {view === 'notes' ? 'notes' : 'papers'} found for {data.semesters.find(s => s.id === activeSem)?.name}.
                 </div>
               )}
             </div>
             
             <footer className="mt-8 pt-4 border-t dark:border-gray-800 text-center text-xs text-gray-500 dark:text-gray-500">
               <p>PolyPrep is a free educational resource.</p>
-              <p>Materials belong to their respective authors.</p>
             </footer>
           </main>
         </>
@@ -239,9 +256,9 @@ function App() {
   );
 }
 
-
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(<App />);
+
 
   </script>
 </body>
