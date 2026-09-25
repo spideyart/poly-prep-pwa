@@ -1,0 +1,16 @@
+{
+  "name": "PolyPrep",
+  "short_name": "PolyPrep",
+  "description": "Previous year question papers and notes for diploma students.",
+  "start_url": "/?source=pwa",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2563eb",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/3413/3413535.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
