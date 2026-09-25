@@ -87,16 +87,28 @@ const data = {
 };
 
 function App() {
-  const [darkMode, setDarkMode] = useState(true);
-  const [activeBranch, setActiveBranch] = useState('cse');
-  const [activeSem, setActiveSem] = useState('3');
+  // 1. Initialize state from localStorage (or default if empty)
+  const [darkMode, setDarkMode] = useState(() => localStorage.getItem('poly_theme') !== 'light');
+  const [activeBranch, setActiveBranch] = useState(() => localStorage.getItem('poly_branch') || 'cse');
+  const [activeSem, setActiveSem] = useState(() => localStorage.getItem('poly_sem') || '3');
+  
   const [searchQuery, setSearchQuery] = useState('');
   const [view, setView] = useState('home'); 
 
+  // 2. Save to localStorage whenever these values change
   useEffect(() => {
+    localStorage.setItem('poly_theme', darkMode ? 'dark' : 'light');
     if (darkMode) document.documentElement.classList.add('dark');
     else document.documentElement.classList.remove('dark');
   }, [darkMode]);
+
+  useEffect(() => {
+    localStorage.setItem('poly_branch', activeBranch);
+  }, [activeBranch]);
+
+  useEffect(() => {
+    localStorage.setItem('poly_sem', activeSem);
+  }, [activeSem]);
 
   const filteredSubjects = data.content.filter(sub => {
     const matchesBranch = sub.branchId === activeBranch;
@@ -107,7 +119,6 @@ function App() {
   });
 
   return (
-    // Added pb-20 so content isn't hidden behind the new bottom navigation
     <div className="max-w-md mx-auto min-h-screen bg-white dark:bg-gray-900 shadow-xl flex flex-col relative pb-20">
       
       {/* --- HOME SCREEN --- */}
@@ -277,6 +288,7 @@ function App() {
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(<App />);
+
 
   </script>
 </body>
