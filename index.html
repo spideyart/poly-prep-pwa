@@ -33,8 +33,7 @@ const data = {
     { id: "1yr", name: "1st Year" },
     { id: "3", name: "3rd Sem" },
     { id: "4", name: "4th Sem" },
-    { id: "5", name: "5th Sem" },
-    { id: "6", name: "6th Sem" }
+    { id: "5", name: "5th Sem" }
   ],
   branches: [
     { id: "cse", short: "CSE" },
@@ -44,35 +43,37 @@ const data = {
     { id: "eee", short: "EEE" }
   ],
   content: [
-    { 
-      id: 1,
-      semester: "3",
-      branchId: "cse", 
-      name: "Data Structures", 
-      code: "CM-303",
-      pyqLink: "https://drive.google.com/...",
-      notesLink: "https://drive.google.com/..."
-    },
-    { 
-      id: 2, 
-      semester: "3",
-      branchId: "cse", 
-      name: "Database Management Systems", 
-      code: "CM-304",
-      pyqLink: "https://drive.google.com/...",
-      notesLink: "https://drive.google.com/..."
-    },
-    { 
-      id: 3, 
-      semester: "4",
-      branchId: "cse", 
-      name: "Computer Hardware & Networking", 
-      code: "CM-404",
-      pyqLink: "https://drive.google.com/...",
-      notesLink: "https://drive.google.com/..."
-    }
+    // --- 1st Year Subjects[span_0](start_span)[span_0](end_span) ---
+    { id: 101, semester: "1yr", branchId: "cse", code: "CM-101", name: "English-I", pyqLink: "#", notesLink: "#" },
+    { id: 102, semester: "1yr", branchId: "cse", code: "CM-102", name: "Engineering Mathematics-I", pyqLink: "#", notesLink: "#" },
+    { id: 103, semester: "1yr", branchId: "cse", code: "CM-103", name: "Engineering Physics", pyqLink: "#", notesLink: "#" },
+    { id: 104, semester: "1yr", branchId: "cse", code: "CM-104", name: "Engineering Chemistry and Environmental studies", pyqLink: "#", notesLink: "#" },
+    { id: 105, semester: "1yr", branchId: "cse", code: "CM-105", name: "Basics of Computer Engineering", pyqLink: "#", notesLink: "#" },
+    { id: 106, semester: "1yr", branchId: "cse", code: "CM-106", name: "Programming in C", pyqLink: "#", notesLink: "#" },
+
+    // --- III Semester Subjects[span_1](start_span)[span_1](end_span) ---
+    { id: 301, semester: "3", branchId: "cse", code: "CM-301", name: "Mathematics - II", pyqLink: "#", notesLink: "#" },
+    { id: 302, semester: "3", branchId: "cse", code: "CM-302", name: "Digital Electronics", pyqLink: "#", notesLink: "#" },
+    { id: 303, semester: "3", branchId: "cse", code: "CM-303", name: "Operating systems", pyqLink: "#", notesLink: "#" },
+    { id: 304, semester: "3", branchId: "cse", code: "CM-304", name: "Data Structures through C", pyqLink: "#", notesLink: "#" },
+    { id: 305, semester: "3", branchId: "cse", code: "CM-305", name: "DBMS", pyqLink: "#", notesLink: "#" },
+
+    // --- IV Semester Subjects[span_2](start_span)[span_2](end_span) ---
+    { id: 401, semester: "4", branchId: "cse", code: "CM-401", name: "Software Engineering", pyqLink: "#", notesLink: "#" },
+    { id: 402, semester: "4", branchId: "cse", code: "CM-402", name: "Web Technologies", pyqLink: "#", notesLink: "#" },
+    { id: 403, semester: "4", branchId: "cse", code: "CM-403", name: "Computer Organization And Microprocessors", pyqLink: "#", notesLink: "#" },
+    { id: 404, semester: "4", branchId: "cse", code: "CM-404", name: "OOP through Java", pyqLink: "#", notesLink: "#" },
+    { id: 405, semester: "4", branchId: "cse", code: "CM-405", name: "Computer Networks &Cyber Security", pyqLink: "#", notesLink: "#" },
+
+    // --- V Semester Subjects[span_3](start_span)[span_3](end_span) ---
+    { id: 501, semester: "5", branchId: "cse", code: "CM-501", name: "Industrial Management and Entrepreneurship", pyqLink: "#", notesLink: "#" },
+    { id: 502, semester: "5", branchId: "cse", code: "CM-502", name: "Big Data & Cloud Computing", pyqLink: "#", notesLink: "#" },
+    { id: 503, semester: "5", branchId: "cse", code: "CM-503", name: "Android Programming", pyqLink: "#", notesLink: "#" },
+    { id: 504, semester: "5", branchId: "cse", code: "CM-504", name: "Internet Of Things", pyqLink: "#", notesLink: "#" },
+    { id: 505, semester: "5", branchId: "cse", code: "CM-505", name: "Python programming", pyqLink: "#", notesLink: "#" }
   ]
 };
+
 
 function App() {
   const [darkMode, setDarkMode] = useState(true);
