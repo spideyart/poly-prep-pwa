@@ -1,265 +1,262 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
-<link rel="manifest" href="/manifest.json">
-<meta name="theme-color" content="#2563eb">
-
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>PolyPrep | PYQs & Notes</title>
+  <title>PolyPrep | GIET Study Portal</title>
   
+  <!-- PWA Manifest & Theme -->
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#2563eb">
+
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
-    tailwind.config = { darkMode: 'class' }
+    tailwind.config = {
+      darkMode: 'class',
+    }
   </script>
 
-  <!-- React & Babel -->
-  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <!-- Google Material Icons (Safe for React) -->
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
+
+  <!-- React & Babel CDNs -->
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
   
-  <!-- Lucide Icons -->
-  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    .scrollbar-hide::-webkit-scrollbar { display: none; }
+    .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+    /* Align Material icons perfectly with text */
+    .material-symbols-outlined { font-size: 20px; vertical-align: middle; }
+    .icon-lg { font-size: 48px; }
+    .icon-md { font-size: 24px; }
+  </style>
 </head>
-<body class="bg-gray-50 dark:bg-gray-950 transition-colors duration-200">
+<body class="bg-gray-100 dark:bg-black transition-colors duration-200">
   <div id="root"></div>
 
   <script type="text/babel">
     const { useState, useEffect } = React;
 
-const { useState, useEffect } = React;
+    const data = {
+      semesters: [
+        { id: "1yr", name: "1st Year" },
+        { id: "3", name: "3rd Sem" },
+        { id: "4", name: "4th Sem" },
+        { id: "5", name: "5th Sem" }
+      ],
+      branches: [
+        { id: "cse", short: "CSE" },
+        { id: "ece", short: "ECE" },
+        { id: "mech", short: "MECH" },
+        { id: "civil", short: "CIVIL" },
+        { id: "eee", short: "EEE" }
+      ],
+      content: [
+        // 1st Year
+        { id: 101, semester: "1yr", branchId: "cse", code: "CM-101", name: "English-I", pyqLink: "#", notesLink: "#" },
+        { id: 102, semester: "1yr", branchId: "cse", code: "CM-102", name: "Engineering Mathematics-I", pyqLink: "#", notesLink: "#" },
+        { id: 103, semester: "1yr", branchId: "cse", code: "CM-103", name: "Engineering Physics", pyqLink: "#", notesLink: "#" },
+        { id: 104, semester: "1yr", branchId: "cse", code: "CM-104", name: "Engineering Chemistry & Environmental", pyqLink: "#", notesLink: "#" },
+        { id: 105, semester: "1yr", branchId: "cse", code: "CM-105", name: "Basics of Computer Engineering", pyqLink: "#", notesLink: "#" },
+        { id: 106, semester: "1yr", branchId: "cse", code: "CM-106", name: "Programming in C", pyqLink: "#", notesLink: "#" },
 
-// (Keep your existing 'data' object here with the semesters, branches, and content)
-const data = {
-  semesters: [
-    { id: "1yr", name: "1st Year" },
-    { id: "3", name: "3rd Sem" },
-    { id: "4", name: "4th Sem" },
-    { id: "5", name: "5th Sem" }
-  ],
-  branches: [
-    { id: "cse", short: "CSE" },
-    { id: "ece", short: "ECE" },
-    { id: "mech", short: "MECH" },
-    { id: "civil", short: "CIVIL" },
-    { id: "eee", short: "EEE" }
-  ],
-  content: [
-    // 1st Year Subjects
-    { id: 101, semester: "1yr", branchId: "cse", code: "CM-101", name: "English-I", pyqLink: "#", notesLink: "#" },
-    { id: 102, semester: "1yr", branchId: "cse", code: "CM-102", name: "Engineering Mathematics-I", pyqLink: "#", notesLink: "#" },
-    { id: 103, semester: "1yr", branchId: "cse", code: "CM-103", name: "Engineering Physics", pyqLink: "#", notesLink: "#" },
-    { id: 104, semester: "1yr", branchId: "cse", code: "CM-104", name: "Engineering Chemistry and Environmental studies", pyqLink: "#", notesLink: "#" },
-    { id: 105, semester: "1yr", branchId: "cse", code: "CM-105", name: "Basics of Computer Engineering", pyqLink: "#", notesLink: "#" },
-    { id: 106, semester: "1yr", branchId: "cse", code: "CM-106", name: "Programming in C", pyqLink: "#", notesLink: "#" },
+        // 3rd Sem
+        { id: 301, semester: "3", branchId: "cse", code: "CM-301", name: "Mathematics - II", pyqLink: "#", notesLink: "#" },
+        { id: 302, semester: "3", branchId: "cse", code: "CM-302", name: "Digital Electronics", pyqLink: "#", notesLink: "#" },
+        { id: 303, semester: "3", branchId: "cse", code: "CM-303", name: "Operating Systems", pyqLink: "#", notesLink: "#" },
+        { id: 304, semester: "3", branchId: "cse", code: "CM-304", name: "Data Structures through C", pyqLink: "#", notesLink: "#" },
+        { id: 305, semester: "3", branchId: "cse", code: "CM-305", name: "DBMS", pyqLink: "#", notesLink: "#" },
 
-    // III Semester Subjects
-    { id: 301, semester: "3", branchId: "cse", code: "CM-301", name: "Mathematics - II", pyqLink: "#", notesLink: "#" },
-    { id: 302, semester: "3", branchId: "cse", code: "CM-302", name: "Digital Electronics", pyqLink: "#", notesLink: "#" },
-    { id: 303, semester: "3", branchId: "cse", code: "CM-303", name: "Operating systems", pyqLink: "#", notesLink: "#" },
-    { id: 304, semester: "3", branchId: "cse", code: "CM-304", name: "Data Structures through C", pyqLink: "#", notesLink: "#" },
-    { id: 305, semester: "3", branchId: "cse", code: "CM-305", name: "DBMS", pyqLink: "#", notesLink: "#" },
+        // 4th Sem
+        { id: 401, semester: "4", branchId: "cse", code: "CM-401", name: "Software Engineering", pyqLink: "#", notesLink: "#" },
+        { id: 402, semester: "4", branchId: "cse", code: "CM-402", name: "Web Technologies", pyqLink: "#", notesLink: "#" },
+        { id: 403, semester: "4", branchId: "cse", code: "CM-403", name: "Computer Organization", pyqLink: "#", notesLink: "#" },
+        { id: 404, semester: "4", branchId: "cse", code: "CM-404", name: "OOP through Java", pyqLink: "#", notesLink: "#" },
+        { id: 405, semester: "4", branchId: "cse", code: "CM-405", name: "Computer Networks & Cyber Security", pyqLink: "#", notesLink: "#" },
 
-    // IV Semester Subjects
-    { id: 401, semester: "4", branchId: "cse", code: "CM-401", name: "Software Engineering", pyqLink: "#", notesLink: "#" },
-    { id: 402, semester: "4", branchId: "cse", code: "CM-402", name: "Web Technologies", pyqLink: "#", notesLink: "#" },
-    { id: 403, semester: "4", branchId: "cse", code: "CM-403", name: "Computer Organization And Microprocessors", pyqLink: "#", notesLink: "#" },
-    { id: 404, semester: "4", branchId: "cse", code: "CM-404", name: "OOP through Java", pyqLink: "#", notesLink: "#" },
-    { id: 405, semester: "4", branchId: "cse", code: "CM-405", name: "Computer Networks &Cyber Security", pyqLink: "#", notesLink: "#" },
+        // 5th Sem
+        { id: 501, semester: "5", branchId: "cse", code: "CM-501", name: "Industrial Management & Entrepreneurship", pyqLink: "#", notesLink: "https://drive.google.com/your-link-here" },
+        { id: 502, semester: "5", branchId: "cse", code: "CM-502", name: "Big Data & Cloud Computing", pyqLink: "#", notesLink: "#" },
+        { id: 503, semester: "5", branchId: "cse", code: "CM-503", name: "Android Programming", pyqLink: "#", notesLink: "#" },
+        { id: 504, semester: "5", branchId: "cse", code: "CM-504", name: "Internet Of Things", pyqLink: "#", notesLink: "#" },
+        { id: 505, semester: "5", branchId: "cse", code: "CM-505", name: "Python Programming", pyqLink: "#", notesLink: "#" }
+      ]
+    };
 
-    // V Semester Subjects
-    { id: 501, semester: "5", branchId: "cse", code: "CM-501", name: "Industrial Management and Entrepreneurship", pyqLink: "#", notesLink: "https://drive.google.com/your-link-here" },
-    { id: 502, semester: "5", branchId: "cse", code: "CM-502", name: "Big Data & Cloud Computing", pyqLink: "#", notesLink: "#" },
-    { id: 503, semester: "5", branchId: "cse", code: "CM-503", name: "Android Programming", pyqLink: "#", notesLink: "#" },
-    { id: 504, semester: "5", branchId: "cse", code: "CM-504", name: "Internet Of Things", pyqLink: "#", notesLink: "#" },
-    { id: 505, semester: "5", branchId: "cse", code: "CM-505", name: "Python programming", pyqLink: "#", notesLink: "#" }
-  ]
-};
+    function App() {
+      const [darkMode, setDarkMode] = useState(true);
+      const [activeBranch, setActiveBranch] = useState('cse');
+      const [activeSem, setActiveSem] = useState('3');
+      const [searchQuery, setSearchQuery] = useState('');
+      const [view, setView] = useState('home'); 
 
-function App() {
-  const [darkMode, setDarkMode] = useState(true);
-  const [activeBranch, setActiveBranch] = useState('cse');
-  const [activeSem, setActiveSem] = useState('3');
-  const [searchQuery, setSearchQuery] = useState('');
-  
-  // View states: 'home', 'pyqs', or 'notes'
-  const [view, setView] = useState('home'); 
+      useEffect(() => {
+        if (darkMode) document.documentElement.classList.add('dark');
+        else document.documentElement.classList.remove('dark');
+      }, [darkMode]);
 
-  useEffect(() => {
-    if (darkMode) document.documentElement.classList.add('dark');
-    else document.documentElement.classList.remove('dark');
-  }, [darkMode]);
+      const filteredSubjects = data.content.filter(sub => {
+        const matchesBranch = sub.branchId === activeBranch;
+        const matchesSem = sub.semester === activeSem;
+        const matchesSearch = sub.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                              sub.code.toLowerCase().includes(searchQuery.toLowerCase());
+        return matchesBranch && matchesSem && matchesSearch;
+      });
 
-  useEffect(() => {
-    lucide.createIcons();
-  });
-
-  const filteredSubjects = data.content.filter(sub => {
-    const matchesBranch = sub.branchId === activeBranch;
-    const matchesSem = sub.semester === activeSem;
-    const matchesSearch = sub.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                          sub.code.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesBranch && matchesSem && matchesSearch;
-  });
-
-  return (
-    <div className="max-w-md mx-auto min-h-screen bg-white dark:bg-gray-900 shadow-xl flex flex-col">
-      
-      {/* --- HOME SCREEN --- */}
-      {view === 'home' && (
-        <div className="flex-1 flex flex-col p-6 relative justify-center">
-          <div className="absolute top-4 right-4">
-            <button onClick={() => setDarkMode(!darkMode)} className="p-2 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300">
-              <i data-lucide={darkMode ? "sun" : "moon"}></i>
-            </button>
-          </div>
+      return (
+        <div className="max-w-md mx-auto min-h-screen bg-white dark:bg-gray-900 shadow-xl flex flex-col">
           
-          <div className="text-center mb-10 mt-8">
-            <div className="w-24 h-24 mx-auto bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-3xl flex items-center justify-center mb-6 shadow-sm">
-              <i data-lucide="book-open" className="w-12 h-12"></i>
-            </div>
-            <h1 className="text-4xl font-extrabold text-gray-900 dark:text-white mb-3 tracking-tight">PolyPrep</h1>
-            <p className="text-gray-500 dark:text-gray-400 text-sm leading-relaxed px-4">
-              The zero-bloat study portal for GIET Polytechnic students.
-            </p>
-          </div>
-          
-          <div className="space-y-4 w-full">
-            <button 
-              onClick={() => { setView('notes'); window.scrollTo(0,0); }}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-5 px-4 rounded-2xl transition-all active:scale-95 shadow-lg shadow-blue-600/30 flex items-center justify-between"
-            >
-              <div className="flex items-center gap-3">
-                <i data-lucide="book" className="w-6 h-6"></i>
-                <span className="text-lg">Study Notes</span>
-              </div>
-              <i data-lucide="arrow-right" className="w-5 h-5 opacity-80"></i>
-            </button>
-
-            <button 
-              onClick={() => { setView('pyqs'); window.scrollTo(0,0); }}
-              className="w-full bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-900 dark:text-white font-semibold py-5 px-4 rounded-2xl transition-all active:scale-95 shadow-sm flex items-center justify-between border dark:border-gray-200 dark:border-gray-700"
-            >
-              <div className="flex items-center gap-3">
-                <i data-lucide="file-text" className="w-6 h-6"></i>
-                <span className="text-lg">Previous Papers</span>
-              </div>
-              <i data-lucide="arrow-right" className="w-5 h-5 opacity-80"></i>
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* --- DIRECTORY SCREEN (Notes or PYQs) --- */}
-      {(view === 'notes' || view === 'pyqs') && (
-        <>
-          <header className="sticky top-0 z-10 bg-white dark:bg-gray-900 border-b dark:border-gray-800 pt-4">
-            <div className="flex justify-between items-center px-4 mb-4">
-              <div className="flex items-center gap-3">
-                <button onClick={() => setView('home')} className="p-2 -ml-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-300 transition-colors">
-                  <i data-lucide="arrow-left" className="w-5 h-5"></i>
+          {/* --- HOME SCREEN --- */}
+          {view === 'home' && (
+            <div className="flex-1 flex flex-col p-6 relative justify-center">
+              <div className="absolute top-4 right-4">
+                <button onClick={() => setDarkMode(!darkMode)} className="p-2 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300">
+                  <span className="material-symbols-outlined">{darkMode ? "light_mode" : "dark_mode"}</span>
                 </button>
-                <h1 className="text-xl font-bold text-blue-600 dark:text-blue-400 flex items-center gap-2">
-                  {view === 'notes' ? 'Study Notes' : 'Previous Papers'}
-                </h1>
               </div>
-              <button onClick={() => setDarkMode(!darkMode)} className="p-2 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300">
-                <i data-lucide={darkMode ? "sun" : "moon"}></i>
-              </button>
-            </div>
-
-            {/* Search */}
-            <div className="relative px-4 pb-4">
-              <i data-lucide="search" className="absolute left-7 top-2.5 w-4 h-4 text-gray-400"></i>
-              <input 
-                type="text" 
-                placeholder={`Search ${view === 'notes' ? 'notes' : 'papers'}...`}
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-xl py-2 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-            
-            {/* Semester Selector */}
-            <div className="px-4 pb-4">
-              <select 
-                value={activeSem}
-                onChange={(e) => setActiveSem(e.target.value)}
-                className="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-gray-100 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                {data.semesters.map(sem => (
-                  <option key={sem.id} value={sem.id}>{sem.name}</option>
-                ))}
-              </select>
-            </div>
-          </header>
-
-          <main className="flex-1 p-4 space-y-6">
-            {/* Branch Selector */}
-            <div className="flex space-x-2 overflow-x-auto pb-2 scrollbar-hide">
-              {data.branches.map(branch => (
-                <button
-                  key={branch.id}
-                  onClick={() => {
-                    setActiveBranch(branch.id);
-                    setSearchQuery('');
-                  }}
-                  className={`px-4 py-2 rounded-full text-sm font-medium transition-colors whitespace-nowrap ${
-                    activeBranch === branch.id 
-                      ? 'bg-blue-600 text-white' 
-                      : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300'
-                  }`}
-                >
-                  {branch.short}
-                </button>
-              ))}
-            </div>
-
-            <div className="grid gap-4">
-              {filteredSubjects.length > 0 ? (
-                filteredSubjects.map(subject => (
-                  <div key={subject.id} className="p-4 rounded-2xl border dark:border-gray-800 bg-white dark:bg-gray-800/50 shadow-sm">
-                    <div className="flex justify-between items-start mb-4">
-                      <h3 className="font-semibold text-gray-900 dark:text-white pr-2">{subject.name}</h3>
-                      <span className="text-xs font-mono bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 px-2 py-1 rounded whitespace-nowrap">
-                        {subject.code}
-                      </span>
-                    </div>
-                    
-                    {/* Conditionally Render Only the Relevant Button */}
-                    {view === 'notes' ? (
-                      <a href={subject.notesLink} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2 w-full bg-blue-50 dark:bg-blue-900/20 py-2.5 rounded-xl text-sm font-medium text-blue-700 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/40 transition-colors">
-                        <i data-lucide="book" className="w-4 h-4"></i> Open Notes
-                      </a>
-                    ) : (
-                      <a href={subject.pyqLink} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2 w-full bg-gray-50 dark:bg-gray-700/50 py-2.5 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
-                        <i data-lucide="file-text" className="w-4 h-4"></i> View Past Papers
-                      </a>
-                    )}
-                  </div>
-                ))
-              ) : (
-                <div className="text-center py-8 text-gray-500 dark:text-gray-400">
-                  No {view === 'notes' ? 'notes' : 'papers'} found for {data.semesters.find(s => s.id === activeSem)?.name}.
+              
+              <div className="text-center mb-10 mt-8">
+                <div className="w-24 h-24 mx-auto bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-3xl flex items-center justify-center mb-6 shadow-sm">
+                  <span className="material-symbols-outlined icon-lg">menu_book</span>
                 </div>
-              )}
+                <h1 className="text-4xl font-extrabold text-gray-900 dark:text-white mb-3 tracking-tight">PolyPrep</h1>
+                <p className="text-gray-500 dark:text-gray-400 text-sm leading-relaxed px-4">
+                  The zero-bloat study portal for GIET Polytechnic students.
+                </p>
+              </div>
+              
+              <div className="space-y-4 w-full">
+                <button 
+                  onClick={() => { setView('notes'); window.scrollTo(0,0); }}
+                  className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-5 px-5 rounded-2xl transition-all active:scale-95 shadow-lg shadow-blue-600/30 flex items-center justify-between"
+                >
+                  <div className="flex items-center gap-3">
+                    <span className="material-symbols-outlined icon-md">book</span>
+                    <span className="text-lg">Study Notes</span>
+                  </div>
+                  <span className="material-symbols-outlined">arrow_forward</span>
+                </button>
+
+                <button 
+                  onClick={() => { setView('pyqs'); window.scrollTo(0,0); }}
+                  className="w-full bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-900 dark:text-white font-semibold py-5 px-5 rounded-2xl transition-all active:scale-95 shadow-sm flex items-center justify-between border dark:border-gray-200 dark:border-gray-700"
+                >
+                  <div className="flex items-center gap-3">
+                    <span className="material-symbols-outlined icon-md">description</span>
+                    <span className="text-lg">Previous Papers</span>
+                  </div>
+                  <span className="material-symbols-outlined">arrow_forward</span>
+                </button>
+              </div>
             </div>
-            
-            <footer className="mt-8 pt-4 border-t dark:border-gray-800 text-center text-xs text-gray-500 dark:text-gray-500">
-              <p>PolyPrep is a free educational resource.</p>
-            </footer>
-          </main>
-        </>
-      )}
-    </div>
-  );
-}
+          )}
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(<App />);
+          {/* --- DIRECTORY SCREEN --- */}
+          {(view === 'notes' || view === 'pyqs') && (
+            <>
+              <header className="sticky top-0 z-10 bg-white dark:bg-gray-900 border-b dark:border-gray-800 pt-4">
+                <div className="flex justify-between items-center px-4 mb-4">
+                  <div className="flex items-center gap-3">
+                    <button onClick={() => setView('home')} className="p-2 -ml-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-300 transition-colors">
+                      <span className="material-symbols-outlined">arrow_back</span>
+                    </button>
+                    <h1 className="text-xl font-bold text-blue-600 dark:text-blue-400 flex items-center gap-2">
+                      {view === 'notes' ? 'Study Notes' : 'Previous Papers'}
+                    </h1>
+                  </div>
+                  <button onClick={() => setDarkMode(!darkMode)} className="p-2 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300">
+                    <span className="material-symbols-outlined">{darkMode ? "light_mode" : "dark_mode"}</span>
+                  </button>
+                </div>
 
+                <div className="relative px-4 pb-4">
+                  <span className="material-symbols-outlined absolute left-6 top-2 text-gray-400" style={{fontSize: '22px'}}>search</span>
+                  <input 
+                    type="text" 
+                    placeholder={`Search ${view === 'notes' ? 'notes' : 'papers'}...`}
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="w-full bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-xl py-2 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+                
+                <div className="px-4 pb-4">
+                  <select 
+                    value={activeSem}
+                    onChange={(e) => setActiveSem(e.target.value)}
+                    className="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-gray-100 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    {data.semesters.map(sem => (
+                      <option key={sem.id} value={sem.id}>{sem.name}</option>
+                    ))}
+                  </select>
+                </div>
+              </header>
 
+              <main className="flex-1 p-4 space-y-6">
+                <div className="flex space-x-2 overflow-x-auto pb-2 scrollbar-hide">
+                  {data.branches.map(branch => (
+                    <button
+                      key={branch.id}
+                      onClick={() => {
+                        setActiveBranch(branch.id);
+                        setSearchQuery('');
+                      }}
+                      className={`px-4 py-2 rounded-full text-sm font-medium transition-colors whitespace-nowrap ${
+                        activeBranch === branch.id 
+                          ? 'bg-blue-600 text-white' 
+                          : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300'
+                      }`}
+                    >
+                      {branch.short}
+                    </button>
+                  ))}
+                </div>
+
+                <div className="grid gap-4">
+                  {filteredSubjects.length > 0 ? (
+                    filteredSubjects.map(subject => (
+                      <div key={subject.id} className="p-4 rounded-2xl border dark:border-gray-800 bg-white dark:bg-gray-800/50 shadow-sm">
+                        <div className="flex justify-between items-start mb-4">
+                          <h3 className="font-semibold text-gray-900 dark:text-white pr-2">{subject.name}</h3>
+                          <span className="text-xs font-mono bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 px-2 py-1 rounded whitespace-nowrap">
+                            {subject.code}
+                          </span>
+                        </div>
+                        
+                        {view === 'notes' ? (
+                          <a href={subject.notesLink} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2 w-full bg-blue-50 dark:bg-blue-900/20 py-2.5 rounded-xl text-sm font-medium text-blue-700 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/40 transition-colors">
+                            <span className="material-symbols-outlined" style={{fontSize: '18px'}}>book</span> Open Notes
+                          </a>
+                        ) : (
+                          <a href={subject.pyqLink} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2 w-full bg-gray-50 dark:bg-gray-700/50 py-2.5 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
+                            <span className="material-symbols-outlined" style={{fontSize: '18px'}}>description</span> View Past Papers
+                          </a>
+                        )}
+                      </div>
+                    ))
+                  ) : (
+                    <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+                      No {view === 'notes' ? 'notes' : 'papers'} found for {data.semesters.find(s => s.id === activeSem)?.name}.
+                    </div>
+                  )}
+                </div>
+                
+                <footer className="mt-8 pt-4 border-t dark:border-gray-800 text-center text-xs text-gray-500 dark:text-gray-500">
+                  <p>PolyPrep is a free educational resource.</p>
+                </footer>
+              </main>
+            </>
+          )}
+        </div>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
   </script>
 </body>
 </html>
