@@ -1,7 +1,9 @@
 // data.js
-const data = {
+window.data = {
   semesters: [
     { id: "1yr", name: "1st Year" },
+// ... keep the rest exactly the same
+
     { id: "3", name: "3rd Sem" },
     { id: "4", name: "4th Sem" },
     { id: "5", name: "5th Sem" }
