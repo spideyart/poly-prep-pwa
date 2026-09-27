@@ -1,7 +1,10 @@
 // App.js
 const { useState, useEffect } = React;
+const data = window.data; // <-- Add this exact line
 
 function App() {
+// ... keep the rest exactly the same
+
   // Auth States
   const [isLoggedIn, setIsLoggedIn] = useState(() => localStorage.getItem('poly_logged_in') === 'true');
   const [authMode, setAuthMode] = useState('login'); 
