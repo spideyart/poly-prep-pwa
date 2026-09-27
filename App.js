@@ -3,11 +3,16 @@ const { useState, useEffect } = React;
 const data = window.data;
 
 function App() {
-  // Auth States
-  const [isLoggedIn, setIsLoggedIn] = useState(() => localStorage.getItem('poly_logged_in') === 'true');
+  // Firebase Auth States
+  const [user, setUser] = useState(null);
+  const [authLoading, setAuthLoading] = useState(true);
   const [authMode, setAuthMode] = useState('login'); 
-  const [userName, setUserName] = useState(() => localStorage.getItem('poly_user_name') || '');
-  const [userEmail, setUserEmail] = useState(() => localStorage.getItem('poly_user_email') || '');
+  const [authError, setAuthError] = useState('');
+  
+  // Form States
+  const [userName, setUserName] = useState('');
+  const [userEmail, setUserEmail] = useState('');
+  const [password, setPassword] = useState('');
   
   // App States
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -21,6 +26,15 @@ function App() {
   const [searchQuery, setSearchQuery] = useState('');
   const [view, setView] = useState('home'); 
 
+  // --- FIREBASE AUTHENTICATION LISTENER ---
+  useEffect(() => {
+    const unsubscribe = firebase.auth().onAuthStateChanged((currentUser) => {
+      setUser(currentUser);
+      setAuthLoading(false);
+    });
+    return () => unsubscribe();
+  }, []);
+
   // Effects
   useEffect(() => {
     localStorage.setItem('poly_theme', darkMode ? 'dark' : 'light');
@@ -31,9 +45,6 @@ function App() {
   useEffect(() => localStorage.setItem('poly_branch', activeBranch), [activeBranch]);
   useEffect(() => localStorage.setItem('poly_sem', activeSem), [activeSem]);
   useEffect(() => localStorage.setItem('poly_pinned', JSON.stringify(pinnedSubjects)), [pinnedSubjects]);
-  useEffect(() => localStorage.setItem('poly_logged_in', isLoggedIn), [isLoggedIn]);
-  useEffect(() => localStorage.setItem('poly_user_name', userName), [userName]);
-  useEffect(() => localStorage.setItem('poly_user_email', userEmail), [userEmail]);
 
   const togglePin = (id) => {
     if (pinnedSubjects.includes(id)) {
@@ -43,17 +54,42 @@ function App() {
     }
   };
 
-  const handleAuthSubmit = (e) => {
+  // --- FIREBASE FUNCTIONS ---
+  const handleAuthSubmit = async (e) => {
     e.preventDefault();
-    // This provides the local UI login experience. 
-    // True backend security (Firebase/Supabase) can be wired here later.
-    setIsLoggedIn(true);
+    setAuthError('');
+    try {
+      if (authMode === 'signup') {
+        const userCredential = await firebase.auth().createUserWithEmailAndPassword(userEmail, password);
+        await userCredential.user.updateProfile({ displayName: userName });
+        // Force state update to reflect the new name immediately
+        setUser({ ...userCredential.user, displayName: userName }); 
+      } else {
+        await firebase.auth().signInWithEmailAndPassword(userEmail, password);
+      }
+    } catch (error) {
+      // Clean up Firebase error messages for the user
+      setAuthError(error.message.replace('Firebase: ', ''));
+    }
   };
 
   const handleLogout = () => {
-    setIsLoggedIn(false);
+    firebase.auth().signOut();
     setIsDrawerOpen(false);
     setView('home');
+  };
+
+  const handleForgotPassword = async () => {
+    if (!userEmail) {
+      setAuthError("Please type your email address in the box first.");
+      return;
+    }
+    try {
+      await firebase.auth().sendPasswordResetEmail(userEmail);
+      setAuthError("Password reset email sent! Check your inbox.");
+    } catch (error) {
+      setAuthError(error.message.replace('Firebase: ', ''));
+    }
   };
 
   const filteredSubjects = data.content.filter(sub => {
@@ -68,8 +104,12 @@ function App() {
   const dateOptions = { weekday: 'long', day: 'numeric', month: 'long' };
   const todayString = new Date().toLocaleDateString('en-US', dateOptions);
 
+  if (authLoading) {
+    return <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-surface"><div className="animate-pulse text-brand font-bold text-xl">Loading PolyPrep...</div></div>;
+  }
+
   // --- AUTH SCREEN ---
-  if (!isLoggedIn) {
+  if (!user) {
     return (
       <div className="max-w-md mx-auto min-h-screen bg-gray-50 dark:bg-surface flex flex-col justify-center p-6 relative">
         <div className="absolute top-6 right-6">
@@ -83,35 +123,38 @@ function App() {
             <span className="material-symbols-outlined" style={{fontSize: '40px'}}>auto_stories</span>
           </div>
           <h1 className="text-3xl font-extrabold text-gray-900 dark:text-white mb-2 tracking-tight">PolyPrep</h1>
-          <p className="text-gray-500 dark:text-gray-400 text-sm">The Zero-Bloat Study Portal</p>
+          <p className="text-gray-500 dark:text-gray-400 text-sm">GIET Zero-Bloat Study Portal</p>
         </div>
         
         <div className="bg-white dark:bg-gray-900 rounded-3xl p-6 shadow-xl border border-gray-100 dark:border-gray-800">
           <div className="flex mb-6 bg-gray-100 dark:bg-gray-800 p-1 rounded-xl">
-            <button onClick={() => setAuthMode('login')} className={`flex-1 py-2 text-sm font-bold rounded-lg transition-colors ${authMode === 'login' ? 'bg-white dark:bg-gray-700 shadow-sm text-brand dark:text-white' : 'text-gray-500'}`}>Sign In</button>
-            <button onClick={() => setAuthMode('signup')} className={`flex-1 py-2 text-sm font-bold rounded-lg transition-colors ${authMode === 'signup' ? 'bg-white dark:bg-gray-700 shadow-sm text-brand dark:text-white' : 'text-gray-500'}`}>Sign Up</button>
+            <button onClick={() => {setAuthMode('login'); setAuthError('');}} className={`flex-1 py-2 text-sm font-bold rounded-lg transition-colors ${authMode === 'login' ? 'bg-white dark:bg-gray-700 shadow-sm text-brand dark:text-white' : 'text-gray-500'}`}>Sign In</button>
+            <button onClick={() => {setAuthMode('signup'); setAuthError('');}} className={`flex-1 py-2 text-sm font-bold rounded-lg transition-colors ${authMode === 'signup' ? 'bg-white dark:bg-gray-700 shadow-sm text-brand dark:text-white' : 'text-gray-500'}`}>Sign Up</button>
           </div>
 
           <form onSubmit={handleAuthSubmit} className="space-y-4">
             {authMode === 'signup' && (
               <div>
                 <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 mb-1 ml-1 uppercase tracking-wider">Full Name</label>
-                <input type="text" value={userName} onChange={(e) => setUserName(e.target.value)} placeholder="e.g. Rahul Sharma" className="w-full bg-gray-50 dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand" required />
+                <input type="text" value={userName} onChange={(e) => setUserName(e.target.value)} placeholder="e.g. Rahul Sharma" className="w-full bg-gray-50 dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand" required={authMode === 'signup'} />
               </div>
             )}
             <div>
-              <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 mb-1 ml-1 uppercase tracking-wider">Email or Username</label>
-              <input type="text" value={userEmail} onChange={(e) => setUserEmail(e.target.value)} placeholder="e.g. rahul@gmail.com" className="w-full bg-gray-50 dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand" required />
+              <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 mb-1 ml-1 uppercase tracking-wider">Email Address</label>
+              <input type="email" value={userEmail} onChange={(e) => setUserEmail(e.target.value)} placeholder="e.g. rahul@gmail.com" className="w-full bg-gray-50 dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand" required />
             </div>
             <div>
               <div className="flex justify-between items-center mb-1 ml-1 pr-1">
                 <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Password</label>
                 {authMode === 'login' && (
-                  <button type="button" onClick={() => alert("Forgot password functionality will be enabled when backend is connected.")} className="text-xs font-bold text-brand hover:underline">Forgot Password?</button>
+                  <button type="button" onClick={handleForgotPassword} className="text-xs font-bold text-brand hover:underline">Forgot Password?</button>
                 )}
               </div>
-              <input type="password" placeholder="••••••••" className="w-full bg-gray-50 dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand" required />
+              <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="••••••••" className="w-full bg-gray-50 dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand" required minLength="6" />
             </div>
+            
+            {authError && <div className="text-red-500 text-xs font-bold text-center mt-2 px-2 bg-red-50 dark:bg-red-900/20 py-2 rounded-lg">{authError}</div>}
+
             <button type="submit" className="w-full bg-brand text-white font-bold py-3.5 rounded-xl mt-6 shadow-lg shadow-brand/30 transition-transform active:scale-95">
               {authMode === 'login' ? 'Sign In' : 'Create Account'}
             </button>
@@ -125,7 +168,6 @@ function App() {
   return (
     <div className="max-w-md mx-auto min-h-screen bg-gray-50 dark:bg-gray-950 shadow-2xl flex flex-col relative pb-20 overflow-x-hidden">
       
-      {/* TOP HEADER */}
       <header className="bg-white dark:bg-surface px-4 py-4 flex justify-between items-center z-30">
         <button onClick={() => setIsDrawerOpen(true)} className="p-2 -ml-2 text-gray-800 dark:text-white bg-gray-100 dark:bg-gray-800 rounded-full">
           <span className="material-symbols-outlined" style={{fontSize: '20px'}}>person</span>
@@ -145,15 +187,14 @@ function App() {
           <div className="relative w-4/5 max-w-[300px] bg-white dark:bg-surface h-full flex flex-col shadow-2xl transition-transform transform translate-x-0">
             <div className="p-6 pt-10 border-b border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-900">
               <div className="w-16 h-16 bg-brand text-white rounded-full flex items-center justify-center text-2xl font-bold mb-4 shadow-md">
-                {userName ? userName.charAt(0).toUpperCase() : (userEmail ? userEmail.charAt(0).toUpperCase() : 'U')}
+                {user.displayName ? user.displayName.charAt(0).toUpperCase() : user.email.charAt(0).toUpperCase()}
               </div>
-              <h2 className="font-bold text-lg leading-tight text-gray-900 dark:text-white">{userName || 'PolyPrep User'}</h2>
-              <p className="text-sm text-gray-500 dark:text-gray-400 mt-1 font-mono">{userEmail || 'No email provided'}</p>
+              <h2 className="font-bold text-lg leading-tight text-gray-900 dark:text-white">{user.displayName || 'PolyPrep User'}</h2>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-1 font-mono">{user.email}</p>
             </div>
             <div className="flex-1 overflow-y-auto py-4 space-y-1">
               <button className="w-full flex items-center gap-4 px-6 py-3 text-sm font-semibold text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-left"><span className="material-symbols-outlined text-gray-400">info</span> About PolyPrep</button>
               <button className="w-full flex items-center gap-4 px-6 py-3 text-sm font-semibold text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-left"><span className="material-symbols-outlined text-gray-400">share</span> Share App</button>
-              <button className="w-full flex items-center gap-4 px-6 py-3 text-sm font-semibold text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-left"><span className="material-symbols-outlined text-gray-400">bug_report</span> Report an Issue</button>
             </div>
             <div className="p-4 border-t border-gray-100 dark:border-gray-800">
               <button onClick={handleLogout} className="w-full flex items-center gap-4 px-4 py-3 text-sm font-bold text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition-colors text-left"><span className="material-symbols-outlined">logout</span> Log Out</button>
@@ -167,7 +208,7 @@ function App() {
         <div className="flex-1 p-4 overflow-y-auto scrollbar-hide space-y-6">
           <div className="pt-2 pb-4">
             <p className="text-sm text-gray-500 dark:text-gray-400 font-medium mb-1">{todayString}</p>
-            <h1 className="text-2xl font-extrabold text-gray-900 dark:text-white leading-tight">Welcome back,<br/><span className="text-brand">{userName ? userName.split(' ')[0] : 'Student'}</span></h1>
+            <h1 className="text-2xl font-extrabold text-gray-900 dark:text-white leading-tight">Welcome back,<br/><span className="text-brand">{user.displayName ? user.displayName.split(' ')[0] : 'Student'}</span></h1>
           </div>
           <div className="space-y-4">
             <button onClick={() => { setView('notes'); window.scrollTo(0,0); }} className="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-4 flex items-center gap-4 shadow-sm hover:shadow-md transition-all active:scale-95 text-left">
