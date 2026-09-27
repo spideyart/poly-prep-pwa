@@ -1,5 +1,5 @@
 // App.js
-const { useState, useEffect } = React;
+const { useState, useEffect, useRef } = React;
 const data = window.data;
 
 function App() {
@@ -13,7 +13,7 @@ function App() {
   const [userName, setUserName] = useState('');
   const [userEmail, setUserEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false); // <-- New state for toggle
+  const [showPassword, setShowPassword] = useState(false);
   
   // App States
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -26,6 +26,22 @@ function App() {
   });
   const [searchQuery, setSearchQuery] = useState('');
   const [view, setView] = useState('home'); 
+
+  // --- AI CHAT STATES ---
+  const [isChatOpen, setIsChatOpen] = useState(false);
+  const [chatInput, setChatInput] = useState('');
+  const [isTyping, setIsTyping] = useState(false);
+  const [messages, setMessages] = useState([
+    { role: 'ai', text: "Hi! I'm your PolyPrep AI tutor. Ask me to explain a concept or quiz you on your syllabus!" }
+  ]);
+  const chatEndRef = useRef(null);
+
+  // Auto-scroll chat to bottom
+  useEffect(() => {
+    if (chatEndRef.current) {
+      chatEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [messages, isTyping]);
 
   // --- FIREBASE AUTHENTICATION LISTENER ---
   useEffect(() => {
@@ -91,6 +107,37 @@ function App() {
     }
   };
 
+  // --- AI CHAT FUNCTION ---
+  const handleSendMessage = async (e) => {
+    e.preventDefault();
+    if (!chatInput.trim()) return;
+
+    const userText = chatInput.trim();
+    setMessages(prev => [...prev, { role: 'user', text: userText }]);
+    setChatInput('');
+    setIsTyping(true);
+
+    try {
+      // Calls your new Vercel serverless function
+      const res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: userText })
+      });
+      
+      const data = await res.json();
+      if (data.reply) {
+        setMessages(prev => [...prev, { role: 'ai', text: data.reply }]);
+      } else {
+        setMessages(prev => [...prev, { role: 'ai', text: "Error: Could not retrieve response from server." }]);
+      }
+    } catch (error) {
+      setMessages(prev => [...prev, { role: 'ai', text: "Connection error. Please try again." }]);
+    }
+    
+    setIsTyping(false);
+  };
+
   const filteredSubjects = data.content.filter(sub => {
     const matchesBranch = sub.branchId === activeBranch;
     const matchesSem = sub.semester === activeSem;
@@ -149,25 +196,10 @@ function App() {
                   <button type="button" onClick={handleForgotPassword} className="text-xs font-bold text-brand hover:underline">Forgot Password?</button>
                 )}
               </div>
-              {/* Updated Password Field with Toggle */}
               <div className="relative">
-                <input 
-                  type={showPassword ? "text" : "password"} 
-                  value={password} 
-                  onChange={(e) => setPassword(e.target.value)} 
-                  placeholder="••••••••" 
-                  className="w-full bg-gray-50 dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand pr-12" 
-                  required 
-                  minLength="6" 
-                />
-                <button 
-                  type="button" 
-                  onClick={() => setShowPassword(!showPassword)} 
-                  className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
-                >
-                  <span className="material-symbols-outlined" style={{fontSize: '20px'}}>
-                    {showPassword ? 'visibility_off' : 'visibility'}
-                  </span>
+                <input type={showPassword ? "text" : "password"} value={password} onChange={(e) => setPassword(e.target.value)} placeholder="••••••••" className="w-full bg-gray-50 dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand pr-12" required minLength="6" />
+                <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors">
+                  <span className="material-symbols-outlined" style={{fontSize: '20px'}}>{showPassword ? 'visibility_off' : 'visibility'}</span>
                 </button>
               </div>
             </div>
@@ -187,7 +219,6 @@ function App() {
   return (
     <div className="max-w-5xl mx-auto min-h-screen bg-gray-50 dark:bg-gray-950 shadow-2xl flex flex-col relative pb-20 md:pb-0 overflow-x-hidden">
       
-      {/* TOP HEADER */}
       <header className="bg-white dark:bg-surface px-4 py-4 flex justify-between items-center z-30 shadow-sm border-b border-gray-100 dark:border-gray-800/50">
         <div className="flex items-center gap-3">
           <button onClick={() => setIsDrawerOpen(true)} className="p-2 -ml-2 text-gray-800 dark:text-white bg-gray-100 dark:bg-gray-800 rounded-full transition-transform active:scale-95">
@@ -198,7 +229,6 @@ function App() {
           </div>
         </div>
 
-        {/* Desktop Navigation (Hidden on Mobile) */}
         <div className="hidden md:flex items-center bg-gray-100 dark:bg-gray-900 p-1 rounded-xl">
           <button onClick={() => { setView('home'); window.scrollTo(0,0); }} className={`px-5 py-2 text-sm font-bold rounded-lg transition-colors ${view === 'home' ? 'bg-white dark:bg-gray-700 shadow-sm text-brand dark:text-white' : 'text-gray-500 hover:text-gray-900 dark:hover:text-white'}`}>Home</button>
           <button onClick={() => { setView('notes'); window.scrollTo(0,0); }} className={`px-5 py-2 text-sm font-bold rounded-lg transition-colors ${view === 'notes' ? 'bg-white dark:bg-gray-700 shadow-sm text-brand dark:text-white' : 'text-gray-500 hover:text-gray-900 dark:hover:text-white'}`}>Study Notes</button>
@@ -331,6 +361,60 @@ function App() {
               )}
             </div>
           </main>
+        </div>
+      )}
+
+      {/* --- AI CHAT FLOATING WIDGET --- */}
+      {!isChatOpen && (
+        <button onClick={() => setIsChatOpen(true)} className="fixed bottom-24 right-4 md:bottom-8 md:right-8 z-40 bg-brand hover:bg-brandDark text-white w-14 h-14 rounded-full shadow-[0_8px_30px_rgb(0,0,0,0.2)] flex items-center justify-center transition-transform hover:scale-110 active:scale-95">
+          <span className="material-symbols-outlined" style={{fontSize: '28px'}}>smart_toy</span>
+        </button>
+      )}
+
+      {isChatOpen && (
+        <div className="fixed inset-x-4 bottom-24 md:inset-auto md:bottom-8 md:right-8 md:w-96 z-50 bg-white dark:bg-gray-900 rounded-3xl shadow-2xl border border-gray-200 dark:border-gray-700 flex flex-col h-[60vh] md:h-[500px] overflow-hidden">
+          <div className="bg-brand text-white p-4 flex justify-between items-center shadow-md">
+            <div className="flex items-center gap-2">
+              <span className="material-symbols-outlined" style={{fontSize: '22px'}}>smart_toy</span>
+              <h3 className="font-bold text-sm tracking-wide">PolyPrep AI Tutor</h3>
+            </div>
+            <button onClick={() => setIsChatOpen(false)} className="text-white/80 hover:text-white transition-colors">
+              <span className="material-symbols-outlined" style={{fontSize: '22px'}}>close</span>
+            </button>
+          </div>
+          
+          <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50 dark:bg-gray-950 scrollbar-hide">
+            {messages.map((msg, idx) => (
+              <div key={idx} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                <div className={`max-w-[85%] p-3 text-sm rounded-2xl ${msg.role === 'user' ? 'bg-brand text-white rounded-tr-sm shadow-sm' : 'bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-100 dark:border-gray-700 shadow-sm rounded-tl-sm'}`}>
+                  {msg.text}
+                </div>
+              </div>
+            ))}
+            {isTyping && (
+              <div className="flex justify-start">
+                <div className="bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 shadow-sm rounded-2xl rounded-tl-sm p-4 flex gap-1 items-center">
+                  <div className="w-1.5 h-1.5 bg-brand/60 rounded-full animate-bounce" style={{animationDelay: '0ms'}}></div>
+                  <div className="w-1.5 h-1.5 bg-brand/60 rounded-full animate-bounce" style={{animationDelay: '150ms'}}></div>
+                  <div className="w-1.5 h-1.5 bg-brand/60 rounded-full animate-bounce" style={{animationDelay: '300ms'}}></div>
+                </div>
+              </div>
+            )}
+            <div ref={chatEndRef} />
+          </div>
+          
+          <form onSubmit={handleSendMessage} className="p-3 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 flex gap-2">
+            <input 
+              type="text" 
+              value={chatInput} 
+              onChange={(e) => setChatInput(e.target.value)} 
+              placeholder="Ask a question..." 
+              className="flex-1 bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand dark:text-white"
+            />
+            <button type="submit" disabled={isTyping || !chatInput.trim()} className="bg-brand text-white w-11 h-11 rounded-xl flex items-center justify-center disabled:opacity-50 transition-colors hover:bg-brandDark shadow-sm shadow-brand/20">
+              <span className="material-symbols-outlined" style={{fontSize: '20px'}}>send</span>
+            </button>
+          </form>
         </div>
       )}
 
