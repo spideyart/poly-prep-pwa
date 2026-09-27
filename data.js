@@ -16,7 +16,7 @@ window.data = {
     { id: "eee", short: "EEE" }
   ],
   content: [
-    { id: 501, semester: "5", branchId: "cse", code: "CM-501", name: "Industrial Management & Entrepreneurship", pyqLink: "#", notesLink: "https://drive.google.com/file/d/1dB5eprqI3k2gchMQ-e-inek1VQJeXiR7/view?usp=drivesdk" },
+    { id: 501, semester: "5", branchId: "cse", code: "CM-501", name: "Industrial Management & Entrepreneurship", pyqLink: "https://drive.google.com/file/d/1qh9p1hjn35TCTcS_eKCGpbuOkExIHjrq/view?usp=drivesdk", notesLink: "https://drive.google.com/file/d/1dB5eprqI3k2gchMQ-e-inek1VQJeXiR7/view?usp=drivesdk" },
     { id: 502, semester: "5", branchId: "cse", code: "CM-502", name: "Big Data & Cloud Computing", pyqLink: "#", notesLink: "https://drive.google.com/file/d/1rFHJkUAjlldGf24A3VCrCORyJp-rYJ5m/view?usp=drivesdk" },
     { id: 503, semester: "5", branchId: "cse", code: "CM-503", name: "Android Programming", pyqLink: "#", notesLink: "https://drive.google.com/file/d/1gbqxwrdWGqHYtzm72IukpwbZUUB_J9B-/view?usp=drivesdk" },
     { id: 504, semester: "5", branchId: "cse", code: "CM-504", name: "Internet Of Things", pyqLink: "#", notesLink: "https://drive.google.com/file/d/1Uk9nLXCc0sAR7qadDwxvSr0kPUyESIl_/view?usp=drivesdk" },
