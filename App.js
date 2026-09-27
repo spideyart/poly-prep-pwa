@@ -13,6 +13,7 @@ function App() {
   const [userName, setUserName] = useState('');
   const [userEmail, setUserEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false); // <-- New state for toggle
   
   // App States
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -148,7 +149,27 @@ function App() {
                   <button type="button" onClick={handleForgotPassword} className="text-xs font-bold text-brand hover:underline">Forgot Password?</button>
                 )}
               </div>
-              <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="••••••••" className="w-full bg-gray-50 dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand" required minLength="6" />
+              {/* Updated Password Field with Toggle */}
+              <div className="relative">
+                <input 
+                  type={showPassword ? "text" : "password"} 
+                  value={password} 
+                  onChange={(e) => setPassword(e.target.value)} 
+                  placeholder="••••••••" 
+                  className="w-full bg-gray-50 dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand pr-12" 
+                  required 
+                  minLength="6" 
+                />
+                <button 
+                  type="button" 
+                  onClick={() => setShowPassword(!showPassword)} 
+                  className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+                >
+                  <span className="material-symbols-outlined" style={{fontSize: '20px'}}>
+                    {showPassword ? 'visibility_off' : 'visibility'}
+                  </span>
+                </button>
+              </div>
             </div>
             
             {authError && <div className="text-red-500 text-xs font-bold text-center mt-2 px-2 bg-red-50 dark:bg-red-900/20 py-2 rounded-lg">{authError}</div>}
