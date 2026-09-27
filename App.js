@@ -1,15 +1,13 @@
 // App.js
 const { useState, useEffect } = React;
-const data = window.data; // <-- Add this exact line
+const data = window.data;
 
 function App() {
-// ... keep the rest exactly the same
-
   // Auth States
   const [isLoggedIn, setIsLoggedIn] = useState(() => localStorage.getItem('poly_logged_in') === 'true');
   const [authMode, setAuthMode] = useState('login'); 
   const [userName, setUserName] = useState(() => localStorage.getItem('poly_user_name') || '');
-  const [studentId, setStudentId] = useState(() => localStorage.getItem('poly_student_id') || '');
+  const [userEmail, setUserEmail] = useState(() => localStorage.getItem('poly_user_email') || '');
   
   // App States
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -35,7 +33,7 @@ function App() {
   useEffect(() => localStorage.setItem('poly_pinned', JSON.stringify(pinnedSubjects)), [pinnedSubjects]);
   useEffect(() => localStorage.setItem('poly_logged_in', isLoggedIn), [isLoggedIn]);
   useEffect(() => localStorage.setItem('poly_user_name', userName), [userName]);
-  useEffect(() => localStorage.setItem('poly_student_id', studentId), [studentId]);
+  useEffect(() => localStorage.setItem('poly_user_email', userEmail), [userEmail]);
 
   const togglePin = (id) => {
     if (pinnedSubjects.includes(id)) {
@@ -47,6 +45,8 @@ function App() {
 
   const handleAuthSubmit = (e) => {
     e.preventDefault();
+    // This provides the local UI login experience. 
+    // True backend security (Firebase/Supabase) can be wired here later.
     setIsLoggedIn(true);
   };
 
@@ -56,7 +56,6 @@ function App() {
     setView('home');
   };
 
-  // Uses the 'data' object from data.js
   const filteredSubjects = data.content.filter(sub => {
     const matchesBranch = sub.branchId === activeBranch;
     const matchesSem = sub.semester === activeSem;
@@ -84,7 +83,7 @@ function App() {
             <span className="material-symbols-outlined" style={{fontSize: '40px'}}>auto_stories</span>
           </div>
           <h1 className="text-3xl font-extrabold text-gray-900 dark:text-white mb-2 tracking-tight">PolyPrep</h1>
-          <p className="text-gray-500 dark:text-gray-400 text-sm">GIET Zero-Bloat Study Portal</p>
+          <p className="text-gray-500 dark:text-gray-400 text-sm">The Zero-Bloat Study Portal</p>
         </div>
         
         <div className="bg-white dark:bg-gray-900 rounded-3xl p-6 shadow-xl border border-gray-100 dark:border-gray-800">
@@ -101,15 +100,20 @@ function App() {
               </div>
             )}
             <div>
-              <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 mb-1 ml-1 uppercase tracking-wider">Student ID</label>
-              <input type="text" value={studentId} onChange={(e) => setStudentId(e.target.value)} placeholder="e.g. 24295-CM-012" className="w-full bg-gray-50 dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand" required />
+              <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 mb-1 ml-1 uppercase tracking-wider">Email or Username</label>
+              <input type="text" value={userEmail} onChange={(e) => setUserEmail(e.target.value)} placeholder="e.g. rahul@gmail.com" className="w-full bg-gray-50 dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand" required />
             </div>
             <div>
-              <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 mb-1 ml-1 uppercase tracking-wider">Password</label>
+              <div className="flex justify-between items-center mb-1 ml-1 pr-1">
+                <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Password</label>
+                {authMode === 'login' && (
+                  <button type="button" onClick={() => alert("Forgot password functionality will be enabled when backend is connected.")} className="text-xs font-bold text-brand hover:underline">Forgot Password?</button>
+                )}
+              </div>
               <input type="password" placeholder="••••••••" className="w-full bg-gray-50 dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand" required />
             </div>
             <button type="submit" className="w-full bg-brand text-white font-bold py-3.5 rounded-xl mt-6 shadow-lg shadow-brand/30 transition-transform active:scale-95">
-              {authMode === 'login' ? 'Access Portal' : 'Create Account'}
+              {authMode === 'login' ? 'Sign In' : 'Create Account'}
             </button>
           </form>
         </div>
@@ -141,10 +145,10 @@ function App() {
           <div className="relative w-4/5 max-w-[300px] bg-white dark:bg-surface h-full flex flex-col shadow-2xl transition-transform transform translate-x-0">
             <div className="p-6 pt-10 border-b border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-900">
               <div className="w-16 h-16 bg-brand text-white rounded-full flex items-center justify-center text-2xl font-bold mb-4 shadow-md">
-                {userName ? userName.charAt(0).toUpperCase() : 'S'}
+                {userName ? userName.charAt(0).toUpperCase() : (userEmail ? userEmail.charAt(0).toUpperCase() : 'U')}
               </div>
-              <h2 className="font-bold text-lg leading-tight text-gray-900 dark:text-white">{userName || 'Student'}</h2>
-              <p className="text-sm text-gray-500 dark:text-gray-400 mt-1 font-mono">{studentId || 'ID Not Set'}</p>
+              <h2 className="font-bold text-lg leading-tight text-gray-900 dark:text-white">{userName || 'PolyPrep User'}</h2>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-1 font-mono">{userEmail || 'No email provided'}</p>
             </div>
             <div className="flex-1 overflow-y-auto py-4 space-y-1">
               <button className="w-full flex items-center gap-4 px-6 py-3 text-sm font-semibold text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-left"><span className="material-symbols-outlined text-gray-400">info</span> About PolyPrep</button>
@@ -254,7 +258,7 @@ function App() {
       )}
 
       {/* --- BOTTOM NAVIGATION --- */}
-     <nav className="fixed bottom-0 w-full max-w-md mx-auto bg-white dark:bg-surface border-t border-gray-200 dark:border-gray-800 flex justify-around items-center pb-safe z-40">
+      <nav className="fixed bottom-0 w-full max-w-md mx-auto bg-white dark:bg-surface border-t border-gray-200 dark:border-gray-800 flex justify-around items-center pb-safe z-40">
         <button onClick={() => { setView('home'); window.scrollTo(0,0); }} className={`flex flex-col items-center p-3 w-full transition-colors ${view === 'home' ? 'text-brand' : 'text-gray-400 hover:text-gray-900 dark:hover:text-white'}`}>
           <span className="material-symbols-outlined" style={{fontVariationSettings: view === 'home' ? "'FILL' 1" : "'FILL' 0"}}>{view === 'home' ? 'home' : 'home'}</span>
           <span className="text-[10px] font-bold mt-1">Home</span>
