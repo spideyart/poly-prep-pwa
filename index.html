@@ -33,6 +33,10 @@
   <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
   
+  <!-- Firebase Compat CDNs -->
+  <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-auth-compat.js"></script>
+
   <style>
     .scrollbar-hide::-webkit-scrollbar { display: none; }
     .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
@@ -44,10 +48,21 @@
   
   <div id="root"></div>
 
-  <!-- 1. Load your Data File -->
+  <!-- Initialize Firebase -->
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDtgbWB1j9gMlpyB-rD1nbOPnLG3Kuejdo",
+      authDomain: "polyprep-26934.firebaseapp.com",
+      projectId: "polyprep-26934",
+      storageBucket: "polyprep-26934.firebasestorage.app",
+      messagingSenderId: "490301446630",
+      appId: "1:490301446630:web:398a9a37ca832af283de27"
+    };
+    firebase.initializeApp(firebaseConfig);
+  </script>
+
+  <!-- Load App Files -->
   <script src="./data.js"></script>
-  
-  <!-- 2. Load your React App -->
   <script type="text/babel" src="./App.js"></script>
 
 </body>
