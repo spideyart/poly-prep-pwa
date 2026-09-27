@@ -251,7 +251,7 @@ function App() {
       )}
 
       {/* --- BOTTOM NAVIGATION --- */}
-      <nav className="fixed bottom-0 w-full max-w-md mx-auto bg-white dark:bg-surface border-t border-gray-200 dark:border-gray-800 flex justify-around items-center pb-safe z-40">
+     <nav className="fixed bottom-0 w-full max-w-md mx-auto bg-white dark:bg-surface border-t border-gray-200 dark:border-gray-800 flex justify-around items-center pb-safe z-40">
         <button onClick={() => { setView('home'); window.scrollTo(0,0); }} className={`flex flex-col items-center p-3 w-full transition-colors ${view === 'home' ? 'text-brand' : 'text-gray-400 hover:text-gray-900 dark:hover:text-white'}`}>
           <span className="material-symbols-outlined" style={{fontVariationSettings: view === 'home' ? "'FILL' 1" : "'FILL' 0"}}>{view === 'home' ? 'home' : 'home'}</span>
           <span className="text-[10px] font-bold mt-1">Home</span>
@@ -260,4 +260,14 @@ function App() {
           <span className="material-symbols-outlined" style={{fontVariationSettings: view === 'notes' ? "'FILL' 1" : "'FILL' 0"}}>auto_stories</span>
           <span className="text-[10px] font-bold mt-1">Notes</span>
         </button>
-        <button onClick={() => { setView('pyqs'
+        <button onClick={() => { setView('pyqs'); window.scrollTo(0,0); }} className={`flex flex-col items-center p-3 w-full transition-colors ${view === 'pyqs' ? 'text-brand' : 'text-gray-400 hover:text-gray-900 dark:hover:text-white'}`}>
+          <span className="material-symbols-outlined" style={{fontVariationSettings: view === 'pyqs' ? "'FILL' 1" : "'FILL' 0"}}>history_edu</span>
+          <span className="text-[10px] font-bold mt-1">Papers</span>
+        </button>
+      </nav>
+    </div>
+  );
+}
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<App />);
