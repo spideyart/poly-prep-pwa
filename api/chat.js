@@ -4,10 +4,12 @@ export default async function handler(req, res) {
   }
 
   const { message } = req.body;
-  const apiKey = process.env.GEMINI_API_KEY;
+  
+  // Adding .trim() automatically removes any invisible spaces copied by mistake
+  const apiKey = process.env.GEMINI_API_KEY?.trim();
 
   if (!apiKey) {
-    return res.status(500).json({ error: 'API key not configured in Vercel' });
+    return res.status(500).json({ reply: 'Vercel Error: API key is missing.' });
   }
 
   try {
@@ -20,11 +22,18 @@ export default async function handler(req, res) {
     });
 
     const data = await response.json();
+    
+    // If Gemini rejects the request, send the exact reason to the chat bubble
+    if (data.error) {
+      return res.status(200).json({ reply: `Gemini API Error: ${data.error.message}` });
+    }
+    
+    // Otherwise, send the AI's reply
     const reply = data.candidates[0].content.parts[0].text;
-
     res.status(200).json({ reply });
+    
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Failed to communicate with AI' });
+    res.status(500).json({ reply: 'Server Error: Could not parse AI response.' });
   }
 }
