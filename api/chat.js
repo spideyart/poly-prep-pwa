@@ -4,8 +4,6 @@ export default async function handler(req, res) {
   }
 
   const { message } = req.body;
-  
-  // Adding .trim() automatically removes any invisible spaces copied by mistake
   const apiKey = process.env.GEMINI_API_KEY?.trim();
 
   if (!apiKey) {
@@ -13,9 +11,8 @@ export default async function handler(req, res) {
   }
 
   try {
-    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${apiKey}`, {
-
-
+    // Upgraded to the stable v1 endpoint and gemini-1.5-flash
+    const response = await fetch(`https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -25,12 +22,10 @@ export default async function handler(req, res) {
 
     const data = await response.json();
     
-    // If Gemini rejects the request, send the exact reason to the chat bubble
     if (data.error) {
-      return res.status(200).json({ reply: `Gemini API Error: ${data.error.message}` });
+      return res.status(200).json({ reply: `API Error: ${data.error.message}` });
     }
     
-    // Otherwise, send the AI's reply
     const reply = data.candidates[0].content.parts[0].text;
     res.status(200).json({ reply });
     
