@@ -386,7 +386,8 @@ function App() {
           <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50 dark:bg-gray-950 scrollbar-hide">
             {messages.map((msg, idx) => (
               <div key={idx} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                <div className={`max-w-[85%] p-3 text-sm rounded-2xl ${msg.role === 'user' ? 'bg-brand text-white rounded-tr-sm shadow-sm' : 'bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-100 dark:border-gray-700 shadow-sm rounded-tl-sm'}`}>
+                <div className={`max-w-[85%] p-3 text-sm rounded-2xl whitespace-pre-wrap ${msg.role === 'user' ? // ...rest of the code
+ 'bg-brand text-white rounded-tr-sm shadow-sm' : 'bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-100 dark:border-gray-700 shadow-sm rounded-tl-sm'}`}>
                   {msg.text}
                 </div>
               </div>
