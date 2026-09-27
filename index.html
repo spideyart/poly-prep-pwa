@@ -1,23 +1,29 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en" class="light">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>PolyPrep | GIET Study Portal</title>
   
-  <!-- PWA Manifest & Theme -->
   <link rel="manifest" href="/manifest.json">
-  <meta name="theme-color" content="#2563eb">
+  <meta name="theme-color" content="#2D2A54">
 
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
       darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: '#2D2A54', // Dark purple from the drawer
+          }
+        }
+      }
     }
   </script>
 
-  <!-- Google Material Icons (Safe for React) -->
+  <!-- Google Material Icons -->
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
 
   <!-- React & Babel CDNs -->
@@ -28,326 +34,314 @@
   <style>
     .scrollbar-hide::-webkit-scrollbar { display: none; }
     .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
-    /* Align Material icons perfectly with text */
-    .material-symbols-outlined { font-size: 20px; vertical-align: middle; }
-    .icon-lg { font-size: 48px; }
-    .icon-md { font-size: 24px; }
+    .material-symbols-outlined { font-size: 24px; vertical-align: middle; }
+    body { -webkit-tap-highlight-color: transparent; }
   </style>
 </head>
-<body class="bg-gray-100 dark:bg-black transition-colors duration-200">
+<body class="bg-gray-50 dark:bg-gray-950 transition-colors duration-200">
   <div id="root"></div>
 
   <script type="text/babel">
     const { useState, useEffect } = React;
 
-const data = {
-  semesters: [
-    { id: "1yr", name: "1st Year" },
-    { id: "3", name: "3rd Sem" },
-    { id: "4", name: "4th Sem" },
-    { id: "5", name: "5th Sem" }
-  ],
-  branches: [
-    { id: "cse", short: "CSE" },
-    { id: "ece", short: "ECE" },
-    { id: "mech", short: "MECH" },
-    { id: "civil", short: "CIVIL" },
-    { id: "eee", short: "EEE" }
-  ],
-  content: [
-    // 1st Year
-    { id: 101, semester: "1yr", branchId: "cse", code: "CM-101", name: "English-I", pyqLink: "#", notesLink: "#" },
-    { id: 102, semester: "1yr", branchId: "cse", code: "CM-102", name: "Engineering Mathematics-I", pyqLink: "#", notesLink: "#" },
-    { id: 103, semester: "1yr", branchId: "cse", code: "CM-103", name: "Engineering Physics", pyqLink: "#", notesLink: "#" },
-    { id: 104, semester: "1yr", branchId: "cse", code: "CM-104", name: "Engineering Chemistry & Environmental", pyqLink: "#", notesLink: "#" },
-    { id: 105, semester: "1yr", branchId: "cse", code: "CM-105", name: "Basics of Computer Engineering", pyqLink: "#", notesLink: "#" },
-    { id: 106, semester: "1yr", branchId: "cse", code: "CM-106", name: "Programming in C", pyqLink: "#", notesLink: "#" },
+    const data = {
+      semesters: [
+        { id: "1yr", name: "1st Year" },
+        { id: "3", name: "3rd Sem" },
+        { id: "4", name: "4th Sem" },
+        { id: "5", name: "5th Sem" }
+      ],
+      branches: [
+        { id: "cse", short: "CSE" },
+        { id: "ece", short: "ECE" },
+        { id: "mech", short: "MECH" },
+        { id: "civil", short: "CIVIL" },
+        { id: "eee", short: "EEE" }
+      ],
+      content: [
+        // 5th Sem
+        { id: 501, semester: "5", branchId: "cse", code: "CM-501", name: "Industrial Management & Entrepreneurship", pyqLink: "#", notesLink: "https://drive.google.com/your-link-here" },
+        { id: 502, semester: "5", branchId: "cse", code: "CM-502", name: "Big Data & Cloud Computing", pyqLink: "#", notesLink: "https://drive.google.com/your-link-here" },
+        { id: 503, semester: "5", branchId: "cse", code: "CM-503", name: "Android Programming", pyqLink: "#", notesLink: "#" },
+        { id: 504, semester: "5", branchId: "cse", code: "CM-504", name: "Internet Of Things", pyqLink: "#", notesLink: "#" },
+        { id: 505, semester: "5", branchId: "cse", code: "CM-505", name: "Python Programming", pyqLink: "#", notesLink: "https://drive.google.com/your-link-here" }
+      ]
+    };
 
-    // 3rd Sem
-    { id: 301, semester: "3", branchId: "cse", code: "CM-301", name: "Mathematics - II", pyqLink: "#", notesLink: "#" },
-    { id: 302, semester: "3", branchId: "cse", code: "CM-302", name: "Digital Electronics", pyqLink: "#", notesLink: "#" },
-    { id: 303, semester: "3", branchId: "cse", code: "CM-303", name: "Operating Systems", pyqLink: "#", notesLink: "#" },
-    { id: 304, semester: "3", branchId: "cse", code: "CM-304", name: "Data Structures through C", pyqLink: "#", notesLink: "#" },
-    { id: 305, semester: "3", branchId: "cse", code: "CM-305", name: "DBMS", pyqLink: "#", notesLink: "#" },
+    function App() {
+      // States
+      const [isLoggedIn, setIsLoggedIn] = useState(() => localStorage.getItem('poly_logged_in') === 'true');
+      const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+      const [darkMode, setDarkMode] = useState(() => localStorage.getItem('poly_theme') === 'dark');
+      const [activeBranch, setActiveBranch] = useState(() => localStorage.getItem('poly_branch') || 'cse');
+      const [activeSem, setActiveSem] = useState(() => localStorage.getItem('poly_sem') || '5');
+      const [pinnedSubjects, setPinnedSubjects] = useState(() => {
+        const saved = localStorage.getItem('poly_pinned');
+        return saved ? JSON.parse(saved) : [];
+      });
+      const [searchQuery, setSearchQuery] = useState('');
+      const [view, setView] = useState('home'); 
 
-    // 4th Sem
-    { id: 401, semester: "4", branchId: "cse", code: "CM-401", name: "Software Engineering", pyqLink: "#", notesLink: "#" },
-    { id: 402, semester: "4", branchId: "cse", code: "CM-402", name: "Web Technologies", pyqLink: "#", notesLink: "#" },
-    { id: 403, semester: "4", branchId: "cse", code: "CM-403", name: "Computer Organization", pyqLink: "#", notesLink: "#" },
-    { id: 404, semester: "4", branchId: "cse", code: "CM-404", name: "OOP through Java", pyqLink: "#", notesLink: "#" },
-    { id: 405, semester: "4", branchId: "cse", code: "CM-405", name: "Computer Networks & Cyber Security", pyqLink: "#", notesLink: "#" },
+      // Effects
+      useEffect(() => {
+        localStorage.setItem('poly_theme', darkMode ? 'dark' : 'light');
+        if (darkMode) document.documentElement.classList.add('dark');
+        else document.documentElement.classList.remove('dark');
+      }, [darkMode]);
 
-    // 5th Sem
-    { id: 501, semester: "5", branchId: "cse", code: "CM-501", name: "Industrial Management & Entrepreneurship", pyqLink: "#", notesLink: "https://drive.google.com/file/d/1dB5eprqI3k2gchMQ-e-inek1VQJeXiR7/view?usp=drivesdk" },
-    { id: 502, semester: "5", branchId: "cse", code: "CM-502", name: "Big Data & Cloud Computing", pyqLink: "#", notesLink: "https://drive.google.com/file/d/1rFHJkUAjlldGf24A3VCrCORyJp-rYJ5m/view?usp=drivesdk" },
-    { id: 503, semester: "5", branchId: "cse", code: "CM-503", name: "Android Programming", pyqLink: "#", notesLink: "https://drive.google.com/file/d/1gbqxwrdWGqHYtzm72IukpwbZUUB_J9B-/view?usp=drivesdk" },
-    { id: 504, semester: "5", branchId: "cse", code: "CM-504", name: "Internet Of Things", pyqLink: "#", notesLink: "https://drive.google.com/file/d/1Uk9nLXCc0sAR7qadDwxvSr0kPUyESIl_/view?usp=drivesdk" },
-    { id: 505, semester: "5", branchId: "cse", code: "CM-505", name: "Python Programming", pyqLink: "#", notesLink: "https://drive.google.com/file/d/1PDMk4UYZBCWLLybA9x5C2F-JNtap_nOu/view?usp=drivesdk" }
-  ]
-};
+      useEffect(() => localStorage.setItem('poly_branch', activeBranch), [activeBranch]);
+      useEffect(() => localStorage.setItem('poly_sem', activeSem), [activeSem]);
+      useEffect(() => localStorage.setItem('poly_pinned', JSON.stringify(pinnedSubjects)), [pinnedSubjects]);
+      useEffect(() => localStorage.setItem('poly_logged_in', isLoggedIn), [isLoggedIn]);
 
-function App() {
-  // State Initialization from Local Storage
-  const [darkMode, setDarkMode] = useState(() => localStorage.getItem('poly_theme') !== 'light');
-  const [activeBranch, setActiveBranch] = useState(() => localStorage.getItem('poly_branch') || 'cse');
-  const [activeSem, setActiveSem] = useState(() => localStorage.getItem('poly_sem') || '3');
-  
-  // New Pinned Subjects State
-  const [pinnedSubjects, setPinnedSubjects] = useState(() => {
-    const saved = localStorage.getItem('poly_pinned');
-    return saved ? JSON.parse(saved) : [];
-  });
-  
-  const [searchQuery, setSearchQuery] = useState('');
-  const [view, setView] = useState('home'); 
+      const togglePin = (id) => {
+        if (pinnedSubjects.includes(id)) {
+          setPinnedSubjects(pinnedSubjects.filter(subId => subId !== id));
+        } else {
+          setPinnedSubjects([...pinnedSubjects, id]);
+        }
+      };
 
-  // Save changes to Local Storage
-  useEffect(() => {
-    localStorage.setItem('poly_theme', darkMode ? 'dark' : 'light');
-    if (darkMode) document.documentElement.classList.add('dark');
-    else document.documentElement.classList.remove('dark');
-  }, [darkMode]);
+      const handleLogin = (e) => {
+        e.preventDefault();
+        setIsLoggedIn(true);
+      };
 
-  useEffect(() => localStorage.setItem('poly_branch', activeBranch), [activeBranch]);
-  useEffect(() => localStorage.setItem('poly_sem', activeSem), [activeSem]);
-  useEffect(() => localStorage.setItem('poly_pinned', JSON.stringify(pinnedSubjects)), [pinnedSubjects]);
+      const handleLogout = () => {
+        setIsLoggedIn(false);
+        setIsDrawerOpen(false);
+        setView('home');
+      };
 
-  const togglePin = (id) => {
-    if (pinnedSubjects.includes(id)) {
-      setPinnedSubjects(pinnedSubjects.filter(subId => subId !== id));
-    } else {
-      setPinnedSubjects([...pinnedSubjects, id]);
-    }
-  };
+      const filteredSubjects = data.content.filter(sub => {
+        const matchesBranch = sub.branchId === activeBranch;
+        const matchesSem = sub.semester === activeSem;
+        const matchesSearch = sub.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                              sub.code.toLowerCase().includes(searchQuery.toLowerCase());
+        return matchesBranch && matchesSem && matchesSearch;
+      });
 
-  const filteredSubjects = data.content.filter(sub => {
-    const matchesBranch = sub.branchId === activeBranch;
-    const matchesSem = sub.semester === activeSem;
-    const matchesSearch = sub.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                          sub.code.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesBranch && matchesSem && matchesSearch;
-  });
+      const pinnedList = data.content.filter(sub => pinnedSubjects.includes(sub.id));
 
-  const pinnedList = data.content.filter(sub => pinnedSubjects.includes(sub.id));
+      // Get current date string for the greeting card
+      const dateOptions = { weekday: 'long', day: 'numeric', month: 'long' };
+      const todayString = new Date().toLocaleDateString('en-US', dateOptions);
 
-  return (
-    <div className="max-w-md mx-auto min-h-screen bg-white dark:bg-gray-900 shadow-xl flex flex-col relative pb-20">
-      
-      {/* --- HOME SCREEN --- */}
-      {view === 'home' && (
-        <div className="flex-1 flex flex-col p-6 relative overflow-y-auto scrollbar-hide">
-          <div className="absolute top-4 right-4 z-10">
-            <button onClick={() => setDarkMode(!darkMode)} className="p-2 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300">
-              <span className="material-symbols-outlined">{darkMode ? "light_mode" : "dark_mode"}</span>
-            </button>
-          </div>
-          
-          <div className="text-center mb-8 mt-4">
-            <div className="w-20 h-20 mx-auto bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-3xl flex items-center justify-center mb-4 shadow-sm">
-              <span className="material-symbols-outlined icon-lg">menu_book</span>
+      // --- LOGIN SCREEN ---
+      if (!isLoggedIn) {
+        return (
+          <div className="max-w-md mx-auto min-h-screen bg-white dark:bg-gray-900 flex flex-col justify-center p-6">
+            <div className="text-center mb-10">
+              <div className="w-20 h-20 mx-auto bg-brand text-white rounded-3xl flex items-center justify-center mb-6 shadow-lg">
+                <span className="material-symbols-outlined" style={{fontSize: '40px'}}>menu_book</span>
+              </div>
+              <h1 className="text-3xl font-extrabold text-brand dark:text-white mb-2">PolyPrep</h1>
+              <p className="text-gray-500 dark:text-gray-400 text-sm">GIET Polytechnic Study Portal</p>
             </div>
-            <h1 className="text-3xl font-extrabold text-gray-900 dark:text-white mb-2 tracking-tight">PolyPrep</h1>
-            <p className="text-gray-500 dark:text-gray-400 text-xs leading-relaxed px-4">
-              The zero-bloat study portal for GIET Polytechnic students.
-            </p>
+            
+            <form onSubmit={handleLogin} className="space-y-4">
+              <div>
+                <label className="block text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1 ml-1">Student ID</label>
+                <input type="text" placeholder="e.g. 24295-CM-012" className="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand dark:text-white" required />
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1 ml-1">Password</label>
+                <input type="password" placeholder="••••••••" className="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand dark:text-white" required />
+              </div>
+              <button type="submit" className="w-full bg-brand text-white font-bold py-3.5 rounded-xl mt-6 shadow-md shadow-brand/30 transition-transform active:scale-95">
+                Secure Login
+              </button>
+            </form>
           </div>
+        );
+      }
 
-          {/* Quick-Pin Cram Section */}
-          {pinnedList.length > 0 && (
-            <div className="mb-8">
-              <h2 className="text-sm font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-3 px-1 flex items-center gap-1">
-                <span className="material-symbols-outlined text-[16px]">push_pin</span> Currently Studying
-              </h2>
-              <div className="space-y-3">
-                {pinnedList.map(subject => (
-                  <div key={`pin-${subject.id}`} className="p-4 rounded-2xl bg-yellow-50 dark:bg-yellow-900/10 border border-yellow-200 dark:border-yellow-900/30 shadow-sm relative">
-                    <button onClick={() => togglePin(subject.id)} className="absolute top-3 right-3 text-yellow-600 dark:text-yellow-500 p-1">
-                       <span className="material-symbols-outlined text-[20px]" style={{fontVariationSettings: "'FILL' 1"}}>bookmark</span>
-                    </button>
-                    <div className="pr-8 mb-3">
-                      <h3 className="font-semibold text-gray-900 dark:text-white text-sm leading-tight">{subject.name}</h3>
-                      <span className="text-xs font-mono text-yellow-700 dark:text-yellow-600 mt-1 block">{subject.code}</span>
-                    </div>
-                    <div className="grid grid-cols-2 gap-2">
-                      <a href={subject.notesLink} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-1 w-full bg-white dark:bg-gray-800 border border-yellow-200 dark:border-yellow-900/30 py-2 rounded-xl text-xs font-bold text-blue-600 dark:text-blue-400 hover:bg-gray-50 transition-colors">
-                        <span className="material-symbols-outlined text-[16px]">book</span> Notes
-                      </a>
-                      <a href={subject.pyqLink} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-1 w-full bg-white dark:bg-gray-800 border border-yellow-200 dark:border-yellow-900/30 py-2 rounded-xl text-xs font-bold text-gray-700 dark:text-gray-300 hover:bg-gray-50 transition-colors">
-                        <span className="material-symbols-outlined text-[16px]">description</span> PYQs
-                      </a>
-                    </div>
+      // --- MAIN APP SHELL ---
+      return (
+        <div className="max-w-md mx-auto min-h-screen bg-gray-50 dark:bg-gray-950 shadow-xl flex flex-col relative pb-20 overflow-x-hidden">
+          
+          {/* TOP HEADER */}
+          <header className="bg-white dark:bg-gray-900 px-4 py-3 flex justify-between items-center shadow-sm z-30">
+            <button onClick={() => setIsDrawerOpen(true)} className="p-2 -ml-2 text-gray-700 dark:text-gray-200">
+              <span className="material-symbols-outlined">menu</span>
+            </button>
+            <div className="font-extrabold text-brand dark:text-white tracking-tight flex items-center gap-1">
+               <span className="material-symbols-outlined text-brand dark:text-white" style={{fontSize: '20px'}}>school</span> PolyPrep
+            </div>
+            <button className="p-2 -mr-2 text-gray-700 dark:text-gray-200 relative">
+              <span className="material-symbols-outlined">notifications</span>
+              <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border border-white dark:border-gray-900"></span>
+            </button>
+          </header>
+
+          {/* SIDE DRAWER OVERLAY */}
+          {isDrawerOpen && (
+            <div className="fixed inset-0 z-50 flex max-w-md mx-auto">
+              <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setIsDrawerOpen(false)}></div>
+              <div className="relative w-4/5 max-w-[300px] bg-brand h-full flex flex-col text-white shadow-2xl transition-transform transform translate-x-0">
+                <div className="p-6 pt-10 border-b border-white/10">
+                  <div className="w-16 h-16 bg-white text-brand rounded-2xl flex items-center justify-center text-3xl font-bold mb-4 shadow-inner">
+                    A
                   </div>
-                ))}
+                  <h2 className="font-bold text-sm leading-tight tracking-wide">AKULA VEERA VENKATA<br/>SIVA BHAVANI PRASAD</h2>
+                  <p className="text-xs text-white/60 mt-1 font-mono">ID : 24295-CM-012</p>
+                </div>
+                
+                <div className="flex-1 overflow-y-auto py-4 space-y-1">
+                  <button onClick={() => { setDarkMode(!darkMode); setIsDrawerOpen(false); }} className="w-full flex items-center gap-4 px-6 py-3 text-sm font-medium hover:bg-white/10 transition-colors text-left">
+                    <span className="material-symbols-outlined">{darkMode ? "light_mode" : "dark_mode"}</span> {darkMode ? "Light Mode" : "Dark Mode"}
+                  </button>
+                  <button className="w-full flex items-center gap-4 px-6 py-3 text-sm font-medium hover:bg-white/10 transition-colors text-left">
+                    <span className="material-symbols-outlined">info</span> About PolyPrep
+                  </button>
+                  <button className="w-full flex items-center gap-4 px-6 py-3 text-sm font-medium hover:bg-white/10 transition-colors text-left">
+                    <span className="material-symbols-outlined">share</span> Share App
+                  </button>
+                  <button className="w-full flex items-center gap-4 px-6 py-3 text-sm font-medium hover:bg-white/10 transition-colors text-left">
+                    <span className="material-symbols-outlined">support_agent</span> Help desk
+                  </button>
+                </div>
+
+                <div className="p-4 border-t border-white/10">
+                  <button onClick={handleLogout} className="w-full flex items-center gap-4 px-2 py-3 text-sm font-medium text-red-300 hover:text-red-200 transition-colors text-left">
+                    <span className="material-symbols-outlined">logout</span> Logout
+                  </button>
+                </div>
               </div>
             </div>
           )}
-          
-          {/* Main Navigation Directories */}
-          <h2 className="text-sm font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-3 px-1">
-            Directories
-          </h2>
-          <div className="space-y-3 w-full pb-6">
-            <button 
-              onClick={() => { setView('notes'); window.scrollTo(0,0); }}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-4 px-5 rounded-2xl transition-all active:scale-95 shadow-lg shadow-blue-600/30 flex items-center justify-between"
-            >
-              <div className="flex items-center gap-3">
-                <span className="material-symbols-outlined icon-md">book</span>
-                <span className="text-base">All Study Notes</span>
+
+          {/* --- HOME DASHBOARD --- */}
+          {view === 'home' && (
+            <div className="flex-1 p-4 overflow-y-auto scrollbar-hide space-y-6">
+              
+              {/* Greeting Card */}
+              <div className="bg-white dark:bg-gray-900 rounded-2xl p-5 shadow-sm border border-gray-100 dark:border-gray-800">
+                <h2 className="text-sm font-bold text-gray-900 dark:text-white leading-tight">
+                  Hi Akula Veera Venkata Siva Bhavani Prasad,
+                </h2>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                  Good Evening, {todayString}
+                </p>
+                <div className="mt-4 pt-3 border-t border-gray-100 dark:border-gray-800 flex justify-between items-center text-xs font-semibold text-brand dark:text-blue-400">
+                  <span>View Exam Schedule</span>
+                  <span className="material-symbols-outlined" style={{fontSize: '16px'}}>chevron_right</span>
+                </div>
               </div>
-              <span className="material-symbols-outlined">arrow_forward</span>
-            </button>
 
-            <button 
-              onClick={() => { setView('pyqs'); window.scrollTo(0,0); }}
-              className="w-full bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-900 dark:text-white font-semibold py-4 px-5 rounded-2xl transition-all active:scale-95 shadow-sm flex items-center justify-between border dark:border-gray-200 dark:border-gray-700"
-            >
-              <div className="flex items-center gap-3">
-                <span className="material-symbols-outlined icon-md">description</span>
-                <span className="text-base">Previous Papers</span>
-              </div>
-              <span className="material-symbols-outlined">arrow_forward</span>
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* --- DIRECTORY SCREEN --- */}
-      {(view === 'notes' || view === 'pyqs') && (
-        <>
-          <header className="sticky top-0 z-10 bg-white dark:bg-gray-900 border-b dark:border-gray-800 pt-4">
-            <div className="flex justify-between items-center px-4 mb-4">
-              <h1 className="text-xl font-bold text-blue-600 dark:text-blue-400 flex items-center gap-2">
-                {view === 'notes' ? 'Study Notes' : 'Previous Papers'}
-              </h1>
-              <button onClick={() => setDarkMode(!darkMode)} className="p-2 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300">
-                <span className="material-symbols-outlined">{darkMode ? "light_mode" : "dark_mode"}</span>
-              </button>
-            </div>
-
-            <div className="relative px-4 pb-4">
-              <span className="material-symbols-outlined absolute left-6 top-2 text-gray-400" style={{fontSize: '22px'}}>search</span>
-              <input 
-                type="text" 
-                placeholder={`Search ${view === 'notes' ? 'notes' : 'papers'}...`}
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-xl py-2 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-            
-            <div className="px-4 pb-4">
-              <select 
-                value={activeSem}
-                onChange={(e) => setActiveSem(e.target.value)}
-                className="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-gray-100 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                {data.semesters.map(sem => (
-                  <option key={sem.id} value={sem.id}>{sem.name}</option>
-                ))}
-              </select>
-            </div>
-          </header>
-
-          <main className="flex-1 p-4 space-y-6">
-            <div className="flex space-x-2 overflow-x-auto pb-2 scrollbar-hide">
-              {data.branches.map(branch => (
-                <button
-                  key={branch.id}
-                  onClick={() => {
-                    setActiveBranch(branch.id);
-                    setSearchQuery('');
-                  }}
-                  className={`px-4 py-2 rounded-full text-sm font-medium transition-colors whitespace-nowrap ${
-                    activeBranch === branch.id 
-                      ? 'bg-blue-600 text-white' 
-                      : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300'
-                  }`}
-                >
-                  {branch.short}
-                </button>
-              ))}
-            </div>
-
-            <div className="grid gap-4">
-              {filteredSubjects.length > 0 ? (
-                filteredSubjects.map(subject => {
-                  const isPinned = pinnedSubjects.includes(subject.id);
-                  return (
-                    <div key={subject.id} className={`p-4 rounded-2xl border shadow-sm transition-colors ${isPinned ? 'border-yellow-400 dark:border-yellow-600/50 bg-yellow-50/50 dark:bg-yellow-900/10' : 'border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-800/50'}`}>
-                      <div className="flex justify-between items-start mb-4">
-                        <div>
-                          <h3 className="font-semibold text-gray-900 dark:text-white pr-2">{subject.name}</h3>
-                          <span className="text-xs font-mono bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 px-2 py-1 rounded whitespace-nowrap inline-block mt-2">
-                            {subject.code}
-                          </span>
-                        </div>
-                        <button 
-                          onClick={() => togglePin(subject.id)}
-                          className={`p-2 -mr-2 -mt-2 rounded-full transition-colors ${isPinned ? 'text-yellow-500' : 'text-gray-300 dark:text-gray-600 hover:text-gray-400'}`}
-                        >
-                          <span className="material-symbols-outlined" style={{fontVariationSettings: isPinned ? "'FILL' 1" : "'FILL' 0"}}>bookmark</span>
-                        </button>
-                      </div>
-                      
-                      {view === 'notes' ? (
-                        <a href={subject.notesLink} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2 w-full bg-blue-50 dark:bg-blue-900/20 py-2.5 rounded-xl text-sm font-medium text-blue-700 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/40 transition-colors">
-                          <span className="material-symbols-outlined" style={{fontSize: '18px'}}>book</span> Open Notes
-                        </a>
-                      ) : (
-                        <a href={subject.pyqLink} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2 w-full bg-gray-50 dark:bg-gray-700/50 py-2.5 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
-                          <span className="material-symbols-outlined" style={{fontSize: '18px'}}>description</span> View Past Papers
-                        </a>
-                      )}
+              {/* Essentials Grid (Pastel Colors) */}
+              <div>
+                <h3 className="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-3 px-1">Study Essentials</h3>
+                <div className="grid grid-cols-2 gap-3">
+                  
+                  {/* Notes Card - Pastel Green */}
+                  <button onClick={() => { setView('notes'); window.scrollTo(0,0); }} className="bg-[#EAF5E5] dark:bg-green-900/20 rounded-2xl p-4 text-left transition-transform active:scale-95 shadow-sm">
+                    <div className="w-8 h-8 bg-[#7DBA6C] text-white rounded-lg flex items-center justify-center mb-3">
+                      <span className="material-symbols-outlined" style={{fontSize: '18px'}}>book</span>
                     </div>
-                  );
-                })
-              ) : (
-                <div className="text-center py-8 text-gray-500 dark:text-gray-400">
-                  No {view === 'notes' ? 'notes' : 'papers'} found for {data.semesters.find(s => s.id === activeSem)?.name}.
+                    <h4 className="font-bold text-gray-900 dark:text-gray-100 text-sm">Study Notes</h4>
+                    <p className="text-[10px] text-gray-600 dark:text-gray-400 mt-1">Syllabus materials</p>
+                  </button>
+
+                  {/* Papers Card - Pastel Pink/Red */}
+                  <button onClick={() => { setView('pyqs'); window.scrollTo(0,0); }} className="bg-[#FBECEF] dark:bg-red-900/20 rounded-2xl p-4 text-left transition-transform active:scale-95 shadow-sm">
+                    <div className="w-8 h-8 bg-[#E9667C] text-white rounded-lg flex items-center justify-center mb-3">
+                      <span className="material-symbols-outlined" style={{fontSize: '18px'}}>description</span>
+                    </div>
+                    <h4 className="font-bold text-gray-900 dark:text-gray-100 text-sm">Past Papers</h4>
+                    <p className="text-[10px] text-gray-600 dark:text-gray-400 mt-1">Previous year Qs</p>
+                  </button>
+
+                  {/* Pinned Card - Pastel Purple */}
+                  <button className="bg-[#EFEAF6] dark:bg-purple-900/20 rounded-2xl p-4 text-left transition-transform active:scale-95 shadow-sm">
+                    <div className="w-8 h-8 bg-[#8363B5] text-white rounded-lg flex items-center justify-center mb-3">
+                      <span className="material-symbols-outlined" style={{fontSize: '18px'}}>push_pin</span>
+                    </div>
+                    <h4 className="font-bold text-gray-900 dark:text-gray-100 text-sm">Quick Cram</h4>
+                    <p className="text-[10px] text-gray-600 dark:text-gray-400 mt-1">{pinnedSubjects.length} Pinned Subjects</p>
+                  </button>
+
+                  {/* Syllabus Card - Pastel Blue */}
+                  <button className="bg-[#E6F3F7] dark:bg-blue-900/20 rounded-2xl p-4 text-left transition-transform active:scale-95 shadow-sm">
+                    <div className="w-8 h-8 bg-[#5AB5CB] text-white rounded-lg flex items-center justify-center mb-3">
+                      <span className="material-symbols-outlined" style={{fontSize: '18px'}}>category</span>
+                    </div>
+                    <h4 className="font-bold text-gray-900 dark:text-gray-100 text-sm">All Branches</h4>
+                    <p className="text-[10px] text-gray-600 dark:text-gray-400 mt-1">Explore curriculum</p>
+                  </button>
+                </div>
+              </div>
+
+              {/* Active Pins Section (Only shows if items are pinned) */}
+              {pinnedList.length > 0 && (
+                <div>
+                  <h3 className="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-3 px-1 mt-2">Currently Studying</h3>
+                  <div className="space-y-3">
+                    {pinnedList.map(subject => (
+                      <div key={`pin-${subject.id}`} className="p-4 rounded-2xl bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 shadow-sm relative">
+                        <button onClick={() => togglePin(subject.id)} className="absolute top-3 right-3 text-brand dark:text-blue-400 p-1">
+                           <span className="material-symbols-outlined text-[20px]" style={{fontVariationSettings: "'FILL' 1"}}>bookmark</span>
+                        </button>
+                        <div className="pr-8 mb-3">
+                          <h3 className="font-bold text-gray-900 dark:text-white text-sm leading-tight">{subject.name}</h3>
+                          <span className="text-[10px] font-mono text-gray-500 dark:text-gray-400 mt-1 block">{subject.code}</span>
+                        </div>
+                        <div className="grid grid-cols-2 gap-2">
+                          <a href={subject.notesLink} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-1 w-full bg-gray-50 dark:bg-gray-800 border border-gray-100 dark:border-gray-700 py-2 rounded-xl text-xs font-bold text-brand dark:text-blue-400">
+                            Notes
+                          </a>
+                          <a href={subject.pyqLink} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-1 w-full bg-gray-50 dark:bg-gray-800 border border-gray-100 dark:border-gray-700 py-2 rounded-xl text-xs font-bold text-gray-700 dark:text-gray-300">
+                            PYQs
+                          </a>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               )}
             </div>
-          </main>
-        </>
-      )}
+          )}
 
-      {/* --- NATIVE BOTTOM NAVIGATION --- */}
-      <nav className="fixed bottom-0 w-full max-w-md mx-auto bg-white dark:bg-gray-900 border-t dark:border-gray-800 flex justify-around items-center pb-safe z-50 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] dark:shadow-none">
-        <button 
-          onClick={() => { setView('home'); window.scrollTo(0,0); }} 
-          className={`flex flex-col items-center p-3 w-full transition-colors ${view === 'home' ? 'text-blue-600 dark:text-blue-400' : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'}`}
-        >
-          <span className="material-symbols-outlined" style={{fontSize: '24px'}}>{view === 'home' ? 'home' : 'home_work'}</span>
-          <span className="text-[10px] font-medium mt-1">Home</span>
-        </button>
-        
-        <button 
-          onClick={() => { setView('notes'); window.scrollTo(0,0); }} 
-          className={`flex flex-col items-center p-3 w-full transition-colors ${view === 'notes' ? 'text-blue-600 dark:text-blue-400' : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'}`}
-        >
-          <span className="material-symbols-outlined" style={{fontSize: '24px'}}>book</span>
-          <span className="text-[10px] font-medium mt-1">Notes</span>
-        </button>
-        
-        <button 
-          onClick={() => { setView('pyqs'); window.scrollTo(0,0); }} 
-          className={`flex flex-col items-center p-3 w-full transition-colors ${view === 'pyqs' ? 'text-blue-600 dark:text-blue-400' : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'}`}
-        >
-          <span className="material-symbols-outlined" style={{fontSize: '24px'}}>description</span>
-          <span className="text-[10px] font-medium mt-1">Papers</span>
-        </button>
-      </nav>
+          {/* --- DIRECTORY SCREEN (Notes or PYQs) --- */}
+          {(view === 'notes' || view === 'pyqs') && (
+            <div className="flex-1 flex flex-col h-full bg-white dark:bg-gray-950">
+              
+              <div className="px-4 py-2 border-b border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900 sticky top-0 z-20">
+                <div className="flex justify-between items-center mb-3 mt-1">
+                  <h1 className="text-lg font-bold text-gray-900 dark:text-white">
+                    {view === 'notes' ? 'Study Notes' : 'Previous Papers'}
+                  </h1>
+                </div>
 
-    </div>
-  );
-}
+                <div className="relative mb-3">
+                  <span className="material-symbols-outlined absolute left-3 top-2.5 text-gray-400" style={{fontSize: '20px'}}>search</span>
+                  <input 
+                    type="text" 
+                    placeholder="Search by subject or code..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-gray-100 rounded-xl py-2 pl-10 pr-4 text-sm focus:outline-none focus:ring-1 focus:ring-brand"
+                  />
+                </div>
+                
+                <div className="flex space-x-2 overflow-x-auto pb-2 scrollbar-hide">
+                  {data.semesters.map(sem => (
+                    <button
+                      key={sem.id}
+                      onClick={() => setActiveSem(sem.id)}
+                      className={`px-3 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap transition-colors ${
+                        activeSem === sem.id ? 'bg-brand text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400'
+                      }`}
+                    >
+                      {sem.name}
+                    </button>
+                  ))}
+                </div>
+              </div>
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(<App />);
-
-
-
-  </script>
-</body>
-</html>
+              <main className="flex-1 p-4 space-y-4 overflow-y-auto">
+                <div className="flex space-x-2 overflow-x-auto pb-1 scrollbar-hide">
+                  {data.branches.map(branch => (
+                    <button
+                      key={branch.id}
+             
