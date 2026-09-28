@@ -214,12 +214,31 @@ function App() {
       </div>
     );
   }
-
-  // --- MAIN APP SHELL (RESPONSIVE) ---
+function NotificationBanner() {
   return (
-    <div className="max-w-5xl mx-auto min-h-screen bg-gray-50 dark:bg-gray-950 shadow-2xl flex flex-col relative pb-20 md:pb-0 overflow-x-hidden">
-      
-      <header className="bg-white dark:bg-surface px-4 py-4 flex justify-between items-center z-30 shadow-sm border-b border-gray-100 dark:border-gray-800/50">
+    <div className="w-full bg-blue-50 dark:bg-blue-950/50 border-b border-blue-200 dark:border-blue-900/60 overflow-hidden py-1.5 px-2 flex items-center text-xs sm:text-sm font-medium text-blue-900 dark:text-blue-200">
+      <span className="shrink-0 flex items-center gap-1 bg-blue-600 text-white text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full mr-3 shadow-xs">
+        <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
+        Notice
+      </span>
+      <div className="relative w-full overflow-hidden">
+        <div className="animate-marquee cursor-default">
+          📢 PolyPrep is currently in private beta and exclusively optimized for C-23 Scheme — 5th Semester Computer Engineering students. Other schemes and branches coming soon!
+        </div>
+      </div>
+    </div>
+  );
+}
+
+      // --- MAIN APP SHELL (RESPONSIVE) ---
+    return (
+      <div className="max-w-5xl mx-auto min-h-screen bg-gray-50 dark:bg-gray-950 shadow-2xl flex flex-col relative pb-20 md:pb-0 overflow-x-hidden">
+        
+        {/* ADD IT HERE */}
+        <NotificationBanner />
+
+        <header className="bg-white dark:bg-surface px-4 py-4 flex justify-between items-center z-30 shadow-sm border-b border-gray-100 dark:border-gray-800/50">
+
         <div className="flex items-center gap-3">
           <button onClick={() => setIsDrawerOpen(true)} className="p-2 -ml-2 text-gray-800 dark:text-white bg-gray-100 dark:bg-gray-800 rounded-full transition-transform active:scale-95">
             <span className="material-symbols-outlined" style={{fontSize: '20px'}}>person</span>
