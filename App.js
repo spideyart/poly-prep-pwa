@@ -274,7 +274,7 @@ function App() {
           <div className="grid gap-4 md:grid-cols-2">
             <button onClick={() => { setView('notes'); window.scrollTo(0,0); }} className="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-5 flex items-center gap-4 shadow-sm hover:shadow-md transition-all active:scale-95 text-left group">
               <div className="w-14 h-14 bg-blue-50 dark:bg-blue-900/20 text-brand rounded-xl flex items-center justify-center flex-shrink-0 group-hover:bg-brand group-hover:text-white transition-colors"><span className="material-symbols-outlined">auto_stories</span></div>
-              <div className="flex-1"><h3 className="font-bold text-lg text-gray-900 dark:text-white">Syllabus Notes</h3><p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">AI-generated study guides</p></div>
+              <div className="flex-1"><h3 className="font-bold text-lg text-gray-900 dark:text-white">Syllabus Notes</h3><p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">Comprehensive study guides</p></div>
               <span className="material-symbols-outlined text-gray-300 dark:text-gray-600 group-hover:text-brand transition-colors">chevron_right</span>
             </button>
             <button onClick={() => { setView('pyqs'); window.scrollTo(0,0); }} className="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-5 flex items-center gap-4 shadow-sm hover:shadow-md transition-all active:scale-95 text-left group">
