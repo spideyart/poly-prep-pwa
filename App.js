@@ -169,7 +169,7 @@ function App() {
             <span className="material-symbols-outlined" style={{fontSize: '40px'}}>auto_stories</span>
           </div>
           <h1 className="text-3xl font-extrabold text-gray-900 dark:text-white mb-2 tracking-tight">PolyPrep</h1>
-          <p className="text-gray-500 dark:text-gray-400 text-sm">GIET Zero-Bloat Study Portal</p>
+          <p className="text-gray-500 dark:text-gray-400 text-sm">Zero-Bloat Study Portal</p>
         </div>
         
         <div className="bg-white dark:bg-gray-900 rounded-3xl p-6 shadow-xl border border-gray-100 dark:border-gray-800">
