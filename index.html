@@ -61,11 +61,26 @@
   <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-auth-compat.js"></script>
 
   <style>
-    .scrollbar-hide::-webkit-scrollbar { display: none; }
-    .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
-    .material-symbols-outlined { font-size: 24px; vertical-align: middle; }
-    body { -webkit-tap-highlight-color: transparent; }
-  </style>
+  .scrollbar-hide::-webkit-scrollbar { display: none; }
+  .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+  .material-symbols-outlined { font-size: 24px; vertical-align: middle; }
+  body { -webkit-tap-highlight-color: transparent; }
+
+  /* Smooth Marquee Animation */
+  @keyframes marquee {
+    0% { transform: translateX(100%); }
+    100% { transform: translateX(-100%); }
+  }
+  .animate-marquee {
+    display: inline-block;
+    white-space: nowrap;
+    animation: marquee 18s linear infinite;
+  }
+  .animate-marquee:hover {
+    animation-play-state: paused;
+  }
+</style>
+
 </head>
 <body class="bg-gray-50 dark:bg-gray-950 transition-colors duration-200 text-gray-900 dark:text-gray-100">
   
