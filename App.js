@@ -52,6 +52,196 @@ function PrepEntry({ entry }) {
   );
 }
 
+function shuffle(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    const t = a[i]; a[i] = a[j]; a[j] = t;
+  }
+  return a;
+}
+
+const QUIZ_SUBJECTS = [
+  { id: 'CM-501', name: 'IME' },
+  { id: 'CM-502', name: 'Big Data' },
+  { id: 'CM-503', name: 'Android' },
+  { id: 'CM-504', name: 'IoT' },
+  { id: 'CM-505', name: 'Python' },
+];
+
+function QuizAnswer({ entry }) {
+  return (
+    <div className="mt-4 pt-4 border-t border-gray-100 dark:border-gray-800 text-base text-gray-700 dark:text-gray-200 leading-relaxed whitespace-pre-wrap space-y-3">
+      {entry.tb ? (
+        <>
+          {entry.ti && <p>{entry.ti}</p>}
+          <div className="mt-2 overflow-x-auto">
+            <table className="w-full text-base border-collapse whitespace-normal">
+              <thead>
+                <tr>
+                  {entry.tb.h.map((h, i) => (
+                    <th key={i} className="border border-gray-300 dark:border-gray-600 bg-emerald-100 dark:bg-emerald-900/30 px-3 py-2 text-left font-bold text-gray-900 dark:text-white">{h}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {entry.tb.r.map((row, i) => (
+                  <tr key={i} className={i % 2 === 1 ? 'bg-gray-50 dark:bg-gray-800/50' : ''}>
+                    {row.map((cell, j) => (
+                      <td key={j} className={'border border-gray-300 dark:border-gray-600 px-3 py-2 align-top' + (j === 0 ? ' font-bold' : '')}>{cell}</td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </>
+      ) : (
+        entry.a.split('\n\n').map((para, i) => <p key={i}>{para}</p>)
+      )}
+      {entry.d && (<div className="mt-2 overflow-x-auto" dangerouslySetInnerHTML={{ __html: entry.d }} />)}
+    </div>
+  );
+}
+
+function QuizView({ setView }) {
+  const [screen, setScreen] = React.useState('subjects');
+  const [subject, setSubject] = React.useState(null);
+  const [questions, setQuestions] = React.useState([]);
+  const [qi, setQi] = React.useState(0);
+  const [revealed, setRevealed] = React.useState(false);
+  const [marks, setMarks] = React.useState([]);
+
+  const all = window.pyqPrep || [];
+  const counts = {};
+  all.forEach(e => { counts[e.c] = (counts[e.c] || 0) + 1; });
+
+  const startQuiz = (code) => {
+    const pool = shuffle(all.filter(e => e.c === code));
+    setSubject(code);
+    setQuestions(pool.slice(0, 10));
+    setQi(0);
+    setMarks([]);
+    setRevealed(false);
+    setScreen('quiz');
+    window.scrollTo(0, 0);
+  };
+
+  const mark = (knew) => {
+    const next = marks.concat([knew]);
+    setMarks(next);
+    if (qi + 1 >= questions.length) {
+      setScreen('results');
+    } else {
+      setQi(qi + 1);
+      setRevealed(false);
+    }
+    window.scrollTo(0, 0);
+  };
+
+  const subjectName = (code) => {
+    const s = QUIZ_SUBJECTS.find(x => x.id === code);
+    return s ? s.name : code;
+  };
+
+  if (screen === 'results') {
+    const score = marks.filter(Boolean).length;
+    const total = questions.length;
+    const msg = score >= 8 ? 'Exam-ready! Keep this form going.' : score >= 5 ? 'Getting there — revise the ones you missed.' : 'Keep revising — try the Prep page answers first, then retake.';
+    return (
+      <div className="flex-1 flex flex-col h-full bg-gray-50 dark:bg-gray-950">
+        <div className="px-4 md:px-8 py-6 border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-surface sticky top-0 z-20">
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Quiz results • {subjectName(subject)}</h1>
+          <p className="text-3xl font-extrabold text-brand dark:text-emerald-300 mt-3">{score} / {total} known</p>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">{msg}</p>
+        </div>
+        <main className="flex-1 p-4 md:p-8 space-y-3 overflow-y-auto">
+          {questions.map((entry, i) => (
+            <div key={i} className="p-4 rounded-2xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800">
+              <div className="flex items-start justify-between gap-3">
+                <p className="font-bold text-gray-900 dark:text-white text-base leading-snug">{i + 1}. {entry.q}</p>
+                <span className={`text-xs font-bold px-2 py-1 rounded whitespace-nowrap ${marks[i] ? 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-300' : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300'}`}>{marks[i] ? 'Knew it' : "Didn't know"}</span>
+              </div>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">{entry.c} • Asked in: {entry.y}</p>
+            </div>
+          ))}
+          <div className="flex flex-col sm:flex-row gap-3 pt-2">
+            <button onClick={() => startQuiz(subject)} className="flex-1 bg-brand text-white py-3 rounded-xl text-sm font-bold shadow-sm hover:bg-brandDark active:scale-95 transition-transform">Retake {subjectName(subject)}</button>
+            <button onClick={() => setScreen('subjects')} className="flex-1 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700 py-3 rounded-xl text-sm font-bold active:scale-95 transition-transform">Other subjects</button>
+            <button onClick={() => setView('prep')} className="flex-1 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700 py-3 rounded-xl text-sm font-bold active:scale-95 transition-transform">Back to Prep</button>
+          </div>
+        </main>
+      </div>
+    );
+  }
+
+  if (screen === 'quiz') {
+    const entry = questions[qi];
+    if (!entry) return <div className="flex-1 p-8 text-center text-gray-400">No questions found for this subject.</div>;
+    return (
+      <div className="flex-1 flex flex-col h-full bg-gray-50 dark:bg-gray-950">
+        <div className="px-4 md:px-8 py-3 border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-surface sticky top-0 z-20">
+          <div className="flex justify-between items-center mb-2 mt-2">
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Quiz • {subjectName(subject)}</h1>
+            <button onClick={() => setScreen('subjects')} className="text-sm font-bold text-gray-500 hover:text-gray-900 dark:hover:text-white">Quit</button>
+          </div>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">Question {qi + 1} of {questions.length}</p>
+          <div className="h-2 bg-gray-200 dark:bg-gray-800 rounded-full overflow-hidden mb-1">
+            <div className="h-full bg-brand transition-all" style={{ width: (marks.length / questions.length * 100) + '%' }} />
+          </div>
+        </div>
+        <main className="flex-1 p-4 md:p-8 space-y-4 overflow-y-auto">
+          <div className="p-5 rounded-2xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 shadow-sm">
+            <div className="flex flex-wrap gap-2 mb-3">
+              <span className="text-xs font-bold tracking-wider text-brand dark:text-emerald-300 uppercase bg-brand/10 px-2 py-1 rounded">{entry.c}</span>
+              <span className="text-xs font-bold bg-emerald-100 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-300 px-2 py-1 rounded">{entry.n === 1 ? 'Asked 1 time' : 'Asked ' + entry.n + ' times'}</span>
+              <span className="text-xs font-bold bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 px-2 py-1 rounded">{entry.t === 'essay' ? 'Essay (10 marks)' : 'Short (3 marks)'}</span>
+            </div>
+            <h3 className="font-bold text-gray-900 dark:text-white text-lg leading-snug">{entry.q}</h3>
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">Asked in: {entry.y}</p>
+            {!revealed ? (
+              <button onClick={() => setRevealed(true)} className="mt-4 flex items-center justify-center gap-2 w-full bg-brand text-white py-2.5 rounded-xl text-base font-bold transition-transform active:scale-95 shadow-sm shadow-brand/20 hover:bg-brandDark">
+                <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>visibility</span> Show answer
+              </button>
+            ) : (
+              <>
+                <QuizAnswer entry={entry} />
+                <p className="text-sm font-bold text-gray-900 dark:text-white mt-5 mb-2">Did you know it?</p>
+                <div className="flex gap-3">
+                  <button onClick={() => mark(true)} className="flex-1 bg-brand text-white py-3 rounded-xl text-sm font-bold shadow-sm hover:bg-brandDark active:scale-95 transition-transform">I knew it</button>
+                  <button onClick={() => mark(false)} className="flex-1 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700 py-3 rounded-xl text-sm font-bold active:scale-95 transition-transform">Didn't know</button>
+                </div>
+              </>
+            )}
+          </div>
+        </main>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex-1 flex flex-col h-full bg-gray-50 dark:bg-gray-950">
+      <div className="px-4 md:px-8 py-3 border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-surface sticky top-0 z-20">
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white mt-2">Quiz</h1>
+        <p className="text-sm text-gray-500 dark:text-gray-400 mb-2 mt-1">Pick a 5th Sem subject. You get 10 random questions per round — try to answer first, then check against the real Prep answer.</p>
+      </div>
+      <main className="flex-1 p-4 md:p-8 space-y-4 overflow-y-auto">
+        {QUIZ_SUBJECTS.map(s => (
+          <button key={s.id} onClick={() => startQuiz(s.id)} className="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-5 flex items-center gap-4 shadow-sm hover:shadow-md transition-all active:scale-95 text-left group">
+            <div className="w-14 h-14 bg-brand/10 dark:bg-brand/20 text-brand dark:text-emerald-300 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:bg-brand group-hover:text-white transition-colors"><span className="material-symbols-outlined">psychology</span></div>
+            <div className="flex-1">
+              <h3 className="font-bold text-lg text-gray-900 dark:text-white">{s.name} <span className="text-xs font-mono text-gray-500 dark:text-gray-400 ml-1">{s.id}</span></h3>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">{counts[s.id] || 0} questions in the bank • 10 per round</p>
+            </div>
+            <span className="material-symbols-outlined text-gray-300 dark:text-gray-600 group-hover:text-brand dark:group-hover:text-emerald-300 transition-colors">chevron_right</span>
+          </button>
+        ))}
+        <p className="text-xs text-gray-400 dark:text-gray-500 text-center pt-2">Questions, answers and exam sessions come from the 5th Sem Prep bank — board papers Dec 2022 to Mar/Apr 2026. Nothing here is made up.</p>
+      </main>
+    </div>
+  );
+}
+
 function App() {
   // Firebase Auth States
   const [user, setUser] = useState(null);
@@ -322,6 +512,7 @@ function NotificationBanner() {
           <button onClick={() => { setView('notes'); window.scrollTo(0,0); }} className={`px-5 py-2 text-sm font-bold rounded-lg transition-colors ${view === 'notes' ? 'bg-white dark:bg-gray-700 shadow-sm text-brand dark:text-white' : 'text-gray-500 hover:text-gray-900 dark:hover:text-white'}`}>Study Notes</button>
           <button onClick={() => { setView('pyqs'); window.scrollTo(0,0); }} className={`px-5 py-2 text-sm font-bold rounded-lg transition-colors ${view === 'pyqs' ? 'bg-white dark:bg-gray-700 shadow-sm text-brand dark:text-white' : 'text-gray-500 hover:text-gray-900 dark:hover:text-white'}`}>Previous Papers</button>
           <button onClick={() => { setView('prep'); window.scrollTo(0,0); }} className={`px-5 py-2 text-sm font-bold rounded-lg transition-colors ${view === 'prep' ? 'bg-white dark:bg-gray-700 shadow-sm text-brand dark:text-white' : 'text-gray-500 hover:text-gray-900 dark:hover:text-white'}`}>5th Sem Prep</button>
+          <button onClick={() => { setView('quiz'); window.scrollTo(0,0); }} className={`px-5 py-2 text-sm font-bold rounded-lg transition-colors ${view === 'quiz' ? 'bg-white dark:bg-gray-700 shadow-sm text-brand dark:text-white' : 'text-gray-500 hover:text-gray-900 dark:hover:text-white'}`}>Quiz</button>
         </div>
 
         <button onClick={() => setDarkMode(!darkMode)} className="p-2 -mr-2 text-gray-600 dark:text-gray-300 transition-colors">
@@ -375,6 +566,11 @@ function NotificationBanner() {
               <div className="w-14 h-14 bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:bg-green-600 group-hover:text-white transition-colors"><span className="material-symbols-outlined">quiz</span></div>
               <div className="flex-1"><h3 className="font-bold text-lg text-gray-900 dark:text-white">5th Sem Prep</h3><p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">Repeated questions with answers</p></div>
               <span className="material-symbols-outlined text-gray-300 dark:text-gray-600 group-hover:text-green-600 transition-colors">chevron_right</span>
+            </button>
+            <button onClick={() => { setView('quiz'); window.scrollTo(0,0); }} className="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-5 flex items-center gap-4 shadow-sm hover:shadow-md transition-all active:scale-95 text-left group">
+              <div className="w-14 h-14 bg-brand/10 dark:bg-brand/20 text-brand dark:text-emerald-300 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:bg-brand group-hover:text-white transition-colors"><span className="material-symbols-outlined">psychology</span></div>
+              <div className="flex-1"><h3 className="font-bold text-lg text-gray-900 dark:text-white">Quiz</h3><p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">Test yourself, subject by subject</p></div>
+              <span className="material-symbols-outlined text-gray-300 dark:text-gray-600 group-hover:text-brand dark:group-hover:text-emerald-300 transition-colors">chevron_right</span>
             </button>
           </div>
           
@@ -466,6 +662,7 @@ function NotificationBanner() {
               <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Prepare for 5th Sem</h1>
             </div>
             <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">CME • Repeated questions from Dec 2022 – Mar/Apr 2026 board papers, with answers. Tap "Show answer" to test yourself first.</p>
+            <button onClick={() => { setView('quiz'); window.scrollTo(0,0); }} className="mb-4 flex items-center justify-center gap-2 w-full bg-brand text-white py-2.5 rounded-xl text-sm font-bold shadow-sm shadow-brand/20 hover:bg-brandDark active:scale-95 transition-transform"><span className="material-symbols-outlined" style={{fontSize: '20px'}}>psychology</span> Take a quiz on these questions</button>
             <div className="relative flex-1 mb-3">
               <span className="material-symbols-outlined absolute left-3 top-2.5 text-gray-400" style={{fontSize: '20px'}}>search</span>
               <input type="text" placeholder="Search questions or answers..." value={prepSearch} onChange={(e) => setPrepSearch(e.target.value)} className="w-full bg-gray-100 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 text-gray-900 dark:text-gray-100 rounded-xl py-2 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-brand" />
@@ -489,6 +686,11 @@ function NotificationBanner() {
             )}
           </main>
         </div>
+      )}
+
+      {/* --- QUIZ --- */}
+      {view === 'quiz' && (
+        <QuizView setView={setView} />
       )}
 
       {/* --- AI CHAT FLOATING WIDGET --- */}
@@ -563,6 +765,10 @@ function NotificationBanner() {
         <button onClick={() => { setView('prep'); window.scrollTo(0,0); }} className={`flex flex-col items-center p-3 w-full transition-colors ${view === 'prep' ? 'text-brand' : 'text-gray-400 hover:text-gray-900 dark:hover:text-white'}`}>
           <span className="material-symbols-outlined" style={{fontVariationSettings: view === 'prep' ? "'FILL' 1" : "'FILL' 0"}}>quiz</span>
           <span className="text-[10px] font-bold mt-1">Prep</span>
+        </button>
+        <button onClick={() => { setView('quiz'); window.scrollTo(0,0); }} className={`flex flex-col items-center p-3 w-full transition-colors ${view === 'quiz' ? 'text-brand' : 'text-gray-400 hover:text-gray-900 dark:hover:text-white'}`}>
+          <span className="material-symbols-outlined" style={{fontVariationSettings: view === 'quiz' ? "'FILL' 1" : "'FILL' 0"}}>psychology</span>
+          <span className="text-[10px] font-bold mt-1">Quiz</span>
         </button>
       </nav>
     </div>
