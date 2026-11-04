@@ -8,7 +8,7 @@ function PrepEntry({ entry }) {
     <div className="p-5 rounded-2xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 shadow-sm hover:shadow-md transition-shadow">
       <div className="flex flex-wrap gap-2 mb-3">
         <span className="text-xs font-bold tracking-wider text-brand dark:text-blue-400 uppercase bg-brand/10 px-2 py-1 rounded">{entry.c}</span>
-        <span className="text-xs font-bold bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300 px-2 py-1 rounded">Asked {entry.n} times</span>
+        <span className="text-xs font-bold bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300 px-2 py-1 rounded">{entry.n === 1 ? 'Asked 1 time' : 'Asked ' + entry.n + ' times'}</span>
         <span className="text-xs font-bold bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 px-2 py-1 rounded">{entry.t === 'essay' ? 'Essay (10 marks)' : 'Short (3 marks)'}</span>
       </div>
       <h3 className="font-bold text-gray-900 dark:text-white text-base leading-snug">{entry.q}</h3>
@@ -459,7 +459,7 @@ function NotificationBanner() {
             {filteredPrep.length > 0 ? (
               filteredPrep.map((entry, idx) => <PrepEntry key={idx} entry={entry} />)
             ) : (
-              <div className="text-center py-12 text-gray-400 dark:text-gray-600 text-base">No questions match this selection. Note: Android and Big Data have no repeated questions in the papers analysed so far — try All subjects.</div>
+              <div className="text-center py-12 text-gray-400 dark:text-gray-600 text-base">No questions match this selection — try All subjects or clear the search.</div>
             )}
           </main>
         </div>
