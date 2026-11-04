@@ -18,28 +18,32 @@ function PrepEntry({ entry }) {
       </button>
       {open && (
         <div className="mt-4 pt-4 border-t border-gray-100 dark:border-gray-800 text-sm text-gray-700 dark:text-gray-200 leading-relaxed whitespace-pre-wrap space-y-3">
-          {entry.a.split('\n\n').map((para, i) => <p key={i}>{para}</p>)}
-          {entry.tb && (
-            <div className="mt-2 overflow-x-auto">
-              <table className="w-full text-sm border-collapse whitespace-normal">
-                <thead>
-                  <tr>
-                    {entry.tb.h.map((h, i) => (
-                      <th key={i} className="border border-gray-300 dark:border-gray-600 bg-amber-100 dark:bg-amber-900/30 px-3 py-2 text-left font-bold text-gray-900 dark:text-white">{h}</th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {entry.tb.r.map((row, i) => (
-                    <tr key={i} className={i % 2 === 1 ? 'bg-gray-50 dark:bg-gray-800/50' : ''}>
-                      {row.map((cell, j) => (
-                        <td key={j} className={'border border-gray-300 dark:border-gray-600 px-3 py-2 align-top' + (j === 0 ? ' font-bold' : '')}>{cell}</td>
+          {entry.tb ? (
+            <>
+              {entry.ti && <p>{entry.ti}</p>}
+              <div className="mt-2 overflow-x-auto">
+                <table className="w-full text-sm border-collapse whitespace-normal">
+                  <thead>
+                    <tr>
+                      {entry.tb.h.map((h, i) => (
+                        <th key={i} className="border border-gray-300 dark:border-gray-600 bg-amber-100 dark:bg-amber-900/30 px-3 py-2 text-left font-bold text-gray-900 dark:text-white">{h}</th>
                       ))}
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                  </thead>
+                  <tbody>
+                    {entry.tb.r.map((row, i) => (
+                      <tr key={i} className={i % 2 === 1 ? 'bg-gray-50 dark:bg-gray-800/50' : ''}>
+                        {row.map((cell, j) => (
+                          <td key={j} className={'border border-gray-300 dark:border-gray-600 px-3 py-2 align-top' + (j === 0 ? ' font-bold' : '')}>{cell}</td>
+                        ))}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </>
+          ) : (
+            entry.a.split('\n\n').map((para, i) => <p key={i}>{para}</p>)
           )}
           {entry.d && (<div className="mt-2 overflow-x-auto" dangerouslySetInnerHTML={{ __html: entry.d }} />)}
         </div>

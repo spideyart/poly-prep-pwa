@@ -1,7 +1,8 @@
 // pyq-prep.js — Every unique question from 5th Sem (CME) Board Diploma papers
 // Dec 2022 – Mar/Apr 2026, with answers. n = sessions asked in; y = those sessions.
 // Essays and shorts are separated by the t field; the page filters on it.
-// Difference questions carry a tb field (headers + rows) rendered as a table.
+// Difference questions carry tb (headers + rows) and ti (intro); new page code shows
+// the table instead of the prose, old cached page code still shows the full prose.
 window.pyqPrep = [
  {
   "s": "INDUSTRIAL MANAGEMENT AND ENTREPRENEURSHIP",
@@ -112,7 +113,7 @@ window.pyqPrep = [
   "n": 1,
   "y": "Oct/Nov 2025",
   "q": "Differentiate between CPM and PERT.",
-  "a": "CPM and PERT are both project network techniques, but they differ in the following ways.",
+  "a": "Differences between CPM and PERT:\nCPM stands for Critical Path Method, while PERT stands for Programme Evaluation and Review Technique.\nCPM is activity oriented, while PERT is event oriented.\nCPM uses a single time estimate (deterministic approach) for each activity, while PERT uses three time estimates (optimistic, most likely and pessimistic) and is probabilistic.\nCPM is suitable for projects where activity times are known with certainty, such as construction and repetitive projects, while PERT is suitable for research and development projects where times are uncertain.\nCPM focuses on time-cost trade-off and crashing of the project, while PERT focuses on meeting deadlines and controlling uncertainty.\nCPM was developed for industrial and construction projects, while PERT was developed for the Polaris missile programme.\nIn CPM, dummy activities may be used and the network is activity-on-arrow or activity-on-node, while PERT normally uses event-based networks with activities as arrows.",
   "tb": {
    "h": [
     "Basis of Difference",
@@ -161,7 +162,8 @@ window.pyqPrep = [
      "Event-based network with activities as arrows"
     ]
    ]
-  }
+  },
+  "ti": "CPM and PERT are both project network techniques, but they differ in the following ways."
  },
  {
   "s": "INDUSTRIAL MANAGEMENT AND ENTREPRENEURSHIP",
@@ -369,7 +371,7 @@ window.pyqPrep = [
   "n": 1,
   "y": "Mar/Apr 2024",
   "q": "Explain the differences between public limited company and private limited company.",
-  "a": "A public limited company and a private limited company differ in the following ways.",
+  "a": "Differences between public limited company and private limited company:\nMinimum number of members: public company needs at least 7 members, while private company needs at least 2 members.\nMaximum number of members: there is no maximum limit for a public company, while a private company is limited to 200 members.\nTransfer of shares: shares of a public company can be transferred freely, while shares of a private company cannot be transferred freely.\nInvitation to public: a public company can invite the public to buy its shares and debentures, while a private company cannot.\nProspectus: a public company must issue a prospectus, while a private company need not issue one.\nDirectors: a public company must have at least 3 directors, while a private company must have at least 2 directors.\nName: a public company must use the word Limited at the end of its name, while a private company must use the words Private Limited.\nStatutory meeting: a public company must hold a statutory meeting, while a private company need not hold it.",
   "tb": {
    "h": [
     "Basis of Difference",
@@ -418,7 +420,8 @@ window.pyqPrep = [
      "Need not hold a statutory meeting"
     ]
    ]
-  }
+  },
+  "ti": "A public limited company and a private limited company differ in the following ways."
  },
  {
   "s": "INDUSTRIAL MANAGEMENT AND ENTREPRENEURSHIP",
@@ -544,7 +547,7 @@ window.pyqPrep = [
   "n": 1,
   "y": "Nov 2024",
   "q": "State the differences between delegation and decentralization.",
-  "a": "Delegation and decentralization are related ideas, but they differ in the following ways.",
+  "a": "Differences between delegation and decentralization:\nMeaning: delegation is the transfer of authority by a superior to a subordinate, while decentralization is the systematic dispersal of decision-making authority throughout the organisation.\nScope: delegation is limited to one superior and subordinate, while decentralization covers the whole organisation.\nNature: delegation is a process between two persons, while decentralization is the result of delegation extended to all levels.\nControl: in delegation, the superior retains control and can withdraw authority, while in decentralization, control is also shared but top management retains overall control.\nNecessity: delegation is essential for every organisation, while decentralization is optional and depends on the policy of top management.\nResponsibility: in delegation, the superior remains responsible for the work delegated, while in decentralization, responsibility is also spread to lower levels.\nFreedom: delegation gives limited freedom to the subordinate, while decentralization gives greater freedom of decision to departments and units.",
   "tb": {
    "h": [
     "Basis of Difference",
@@ -588,7 +591,8 @@ window.pyqPrep = [
      "Greater freedom of decision to departments and units"
     ]
    ]
-  }
+  },
+  "ti": "Delegation and decentralization are related ideas, but they differ in the following ways."
  },
  {
   "s": "INDUSTRIAL MANAGEMENT AND ENTREPRENEURSHIP",
@@ -624,7 +628,7 @@ window.pyqPrep = [
   "n": 1,
   "y": "Mar/Apr 2026",
   "q": "Write down the differences between management and administration.",
-  "a": "Management and administration are often confused with each other, but they differ in the following ways.",
+  "a": "Differences between management and administration:\nMeaning: administration means laying down objectives and policies, while management means executing those policies to achieve objectives.\nLevel: administration works at the top level, while management works at middle and lower levels.\nFunction: administration is determinative in nature (deciding what is to be done), while management is executive in nature (doing the work).\nAuthority: administration has full authority over the organisation, while management works within the limits set by administration.\nPersons involved: administration consists of owners, board of directors and chief executives, while management consists of managers, supervisors and departmental heads.\nSkills: administration needs conceptual and administrative skills, while management needs technical and human skills.\nApplicability: administration is more important in government and public organisations, while management is important in business organisations.\nExample: in a company, the board of directors performs administration by fixing policies, and managers perform management by implementing them.",
   "tb": {
    "h": [
     "Basis of Difference",
@@ -673,7 +677,8 @@ window.pyqPrep = [
      "Board of directors fixes policies"
     ]
    ]
-  }
+  },
+  "ti": "Management and administration are often confused with each other, but they differ in the following ways."
  },
  {
   "s": "INDUSTRIAL MANAGEMENT AND ENTREPRENEURSHIP",
@@ -892,7 +897,7 @@ window.pyqPrep = [
   "n": 1,
   "y": "Oct/Nov 2025",
   "q": "Distinguish between job description and job specification.",
-  "a": "A job description and a job specification describe different things, as shown below.",
+  "a": "Differences between job description and job specification:\nJob description describes the job itself: its title, duties, responsibilities, working conditions and reporting relationships.\nJob specification describes the person required for the job: qualifications, experience, skills, age and physical abilities.\nJob description answers what the job is, while job specification answers what kind of person can do it.",
   "tb": {
    "h": [
     "Basis of Difference",
@@ -921,7 +926,8 @@ window.pyqPrep = [
      "Selecting the right candidate"
     ]
    ]
-  }
+  },
+  "ti": "A job description and a job specification describe different things, as shown below."
  },
  {
   "s": "INDUSTRIAL MANAGEMENT AND ENTREPRENEURSHIP",
@@ -1182,7 +1188,7 @@ window.pyqPrep = [
   "n": 1,
   "y": "Nov 2023",
   "q": "Write any three differences between Management and Administration.",
-  "a": "Management and administration differ in the following ways.",
+  "a": "Three differences between Management and Administration:\nAdministration lays down policies and objectives, while management implements them.\nAdministration works at the top level, while management works at middle and lower levels.\nAdministration is determinative in nature, while management is executive in nature.",
   "tb": {
    "h": [
     "Basis of Difference",
@@ -1206,7 +1212,8 @@ window.pyqPrep = [
      "Determinative in nature"
     ]
    ]
-  }
+  },
+  "ti": "Management and administration differ in the following ways."
  },
  {
   "s": "INDUSTRIAL MANAGEMENT AND ENTREPRENEURSHIP",
@@ -1224,7 +1231,7 @@ window.pyqPrep = [
   "n": 1,
   "y": "Mar/Apr 2026",
   "q": "Differentiate between classification and clustering in Data Mining.",
-  "a": "Classification and clustering are both data mining techniques, but they differ in the following ways.",
+  "a": "Classification is supervised learning: it predicts the class label of new data using a model trained on labelled data, where the classes are already known.\nClustering is unsupervised learning: it groups similar data objects together without any predefined classes or labels, and the groups are discovered from the data itself based on similarity.\nDifferences:\n1) Learning type: classification is supervised, clustering is unsupervised.\n2) Labels: classification uses labelled training data, clustering uses unlabelled data.\n3) Classes: in classification the classes are known in advance, in clustering the clusters are formed during analysis.\n4) Goal: classification assigns new data to a known class, clustering finds natural groups and structure in data.\n5) Examples: classification is used in spam detection, disease diagnosis and credit approval, while clustering is used in customer segmentation, document grouping and anomaly detection.\n6) Evaluation: classification accuracy is measured against known labels, while clustering quality is measured by how compact and separated the clusters are.",
   "tb": {
    "h": [
     "Basis of Difference",
@@ -1263,7 +1270,8 @@ window.pyqPrep = [
      "Quality measured by compact and separated clusters"
     ]
    ]
-  }
+  },
+  "ti": "Classification and clustering are both data mining techniques, but they differ in the following ways."
  },
  {
   "s": "BIG DATA AND CLOUD COMPUTING",
@@ -1380,7 +1388,7 @@ window.pyqPrep = [
   "n": 1,
   "y": "Oct/Nov 2025",
   "q": "Write the differences between private cloud and public cloud.",
-  "a": "A private cloud and a public cloud differ in the following ways.",
+  "a": "Differences between private cloud and public cloud:\n1) Ownership: a private cloud is owned and used by a single organisation, while a public cloud is owned by a provider and shared by many users.\n2) Access: a private cloud is accessible only to one organisation, while a public cloud is open to the general public over the internet.\n3) Cost: a private cloud has high setup and maintenance cost, while a public cloud follows pay-per-use and is cheaper.\n4) Security: a private cloud gives higher security and privacy, while a public cloud gives comparatively lower security since resources are shared.\n5) Control: a private cloud gives full control over hardware, software and policies, while a public cloud gives limited control to users.\n6) Scalability: a private cloud has limited scalability based on its own resources, while a public cloud offers almost unlimited scalability.\n7) Maintenance: a private cloud is maintained by the organisation itself, while a public cloud is maintained by the provider.\n8) Examples: a private cloud is an organisation's own data centre, while public clouds include AWS, Microsoft Azure and Google Cloud.",
   "tb": {
    "h": [
     "Basis of Difference",
@@ -1429,7 +1437,8 @@ window.pyqPrep = [
      "AWS, Microsoft Azure, Google Cloud"
     ]
    ]
-  }
+  },
+  "ti": "A private cloud and a public cloud differ in the following ways."
  },
  {
   "s": "BIG DATA AND CLOUD COMPUTING",
@@ -1438,7 +1447,7 @@ window.pyqPrep = [
   "n": 1,
   "y": "Oct/Nov 2025",
   "q": "Write the differences between traditional data and big data approach.",
-  "a": "The traditional data approach and the big data approach differ in the following ways.",
+  "a": "Differences between the traditional data approach and the big data approach:\n1) Volume: traditional data is small and manageable, while big data is huge in volume, measured in terabytes and petabytes.\n2) Variety: traditional data is mostly structured, while big data includes structured, semi-structured and unstructured data such as text, images and video.\n3) Velocity: traditional data is generated slowly and processed in batches, while big data is generated very fast and often needs real-time processing.\n4) Storage: traditional data is stored in centralised relational databases, while big data is stored in distributed systems such as HDFS and NoSQL databases.\n5) Processing: traditional data uses conventional tools and SQL queries, while big data uses frameworks such as Hadoop and Spark.\n6) Tools: the traditional approach uses RDBMS and data warehouses, while the big data approach uses Hadoop, Spark, NoSQL and cloud platforms.\n7) Cost: traditional systems need costly hardware upgrades to scale, while big data systems scale by adding cheap commodity machines.\n8) Analysis: traditional analysis answers what happened, while big data analysis also predicts what will happen using mining and machine learning.",
   "tb": {
    "h": [
     "Basis of Difference",
@@ -1487,7 +1496,8 @@ window.pyqPrep = [
      "Also predicts what will happen"
     ]
    ]
-  }
+  },
+  "ti": "The traditional data approach and the big data approach differ in the following ways."
  },
  {
   "s": "BIG DATA AND CLOUD COMPUTING",
@@ -1496,7 +1506,7 @@ window.pyqPrep = [
   "n": 1,
   "y": "Oct/Nov 2025",
   "q": "Write the major differences between mining and machine learning.",
-  "a": "Data mining and machine learning are closely related, but they differ in the following ways.",
+  "a": "Differences between data mining and machine learning:\n1) Definition: data mining is the process of discovering patterns and knowledge from large data, while machine learning is the process of building models that learn from data and improve with experience.\n2) Purpose: data mining focuses on finding hidden patterns and knowledge, while machine learning focuses on making predictions and decisions on new data.\n3) Data: data mining works on existing large datasets, while machine learning requires training data to build a model and test data to check it.\n4) Human involvement: data mining results are interpreted by humans to take decisions, while machine learning models can act automatically without human involvement.\n5) Techniques: data mining uses association, clustering, classification and outlier analysis, while machine learning uses supervised, unsupervised and reinforcement learning algorithms.\n6) Output: data mining produces patterns, rules and summaries, while machine learning produces a trained model that can predict or classify new inputs.\n7) Example: in data mining, finding that customers who buy bread also buy butter is a discovered pattern, while in machine learning, a spam filter that learns to block new spam mails is a trained model.\n8) Relationship: data mining uses machine learning algorithms as tools, while machine learning is a broader field that includes mining techniques.",
   "tb": {
    "h": [
     "Basis of Difference",
@@ -1545,7 +1555,8 @@ window.pyqPrep = [
      "Broader field that includes mining techniques"
     ]
    ]
-  }
+  },
+  "ti": "Data mining and machine learning are closely related, but they differ in the following ways."
  },
  {
   "s": "BIG DATA AND CLOUD COMPUTING",
@@ -3045,7 +3056,7 @@ window.pyqPrep = [
   "n": 1,
   "y": "Oct/Nov 2024",
   "q": "Compare list, tuple, dictionary and set.",
-  "a": "List, tuple, dictionary and set are the four built-in collection types in Python, and they differ as follows.",
+  "a": "1) List: An ordered collection written in square brackets. It is mutable, allows duplicate values, and elements are accessed by index.\nExample: marks = [85, 90, 85, 70]\n\n2) Tuple: An ordered collection written in round brackets. It is immutable, allows duplicate values, and elements are accessed by index.\nExample: point = (10, 20)\n\n3) Dictionary: An unordered collection of key-value pairs written in curly brackets. Keys must be unique, values are accessed by key, and it is mutable.\nExample: student = {\"name\": \"Asha\", \"age\": 20}\n\n4) Set: An unordered collection written in curly brackets without key-value pairs. It does not allow duplicates, is mutable, and elements cannot be accessed by index.\nExample: numbers = {1, 2, 3}\n\nComparison:\n1) Ordering: List and tuple are ordered, dictionary and set are unordered.\n2) Mutability: List, dictionary and set are mutable, tuple is immutable.\n3) Duplicates: List, tuple and dictionary values allow duplicates, set does not.\n4) Access: List and tuple use index, dictionary uses key, set does not support indexing.\n5) Use: Lists store sequences, tuples store fixed data, dictionaries store labelled data, sets store unique items and support set operations.",
   "tb": {
    "h": [
     "Feature",
@@ -3098,7 +3109,8 @@ window.pyqPrep = [
      "Storing unique items, set operations"
     ]
    ]
-  }
+  },
+  "ti": "List, tuple, dictionary and set are the four built-in collection types in Python, and they differ as follows."
  },
  {
   "s": "PYTHON PROGRAMMING",
@@ -4043,7 +4055,7 @@ window.pyqPrep = [
   "n": 1,
   "y": "Dec 2022",
   "q": "Write any three differences between local variable and global variable in Python. *",
-  "a": "A local variable and a global variable differ in the following ways.",
+  "a": "Three differences between a local variable and a global variable in Python are:\n1) Definition: A local variable is defined inside a function, while a global variable is defined outside all functions.\n2) Accessibility: A local variable can be used only inside the function where it is defined, while a global variable can be used anywhere in the program.\n3) Lifetime: A local variable exists only while the function is running and is destroyed afterwards, while a global variable exists for the whole duration of the program.",
   "tb": {
    "h": [
     "Basis of Difference",
@@ -4067,7 +4079,8 @@ window.pyqPrep = [
      "Exists for the whole program"
     ]
    ]
-  }
+  },
+  "ti": "A local variable and a global variable differ in the following ways."
  },
  {
   "s": "PYTHON PROGRAMMING",
@@ -4076,7 +4089,7 @@ window.pyqPrep = [
   "n": 1,
   "y": "Mar/Apr 2026",
   "q": "Write the difference between a Python module and a package.",
-  "a": "A Python module and a package differ in the following ways.",
+  "a": "A module is a single Python file with the .py extension, containing functions, variables or classes, such as mymath.py.\nA package is a directory containing many related modules, along with a special file named __init__.py that marks the directory as a package.\nIn short, a module is one file, while a package is a collection of modules organised in a folder, imported using dot notation such as import mypackage.mymodule.",
   "tb": {
    "h": [
     "Basis of Difference",
@@ -4105,7 +4118,8 @@ window.pyqPrep = [
      "import mypackage.mymodule"
     ]
    ]
-  }
+  },
+  "ti": "A Python module and a package differ in the following ways."
  },
  {
   "s": "PYTHON PROGRAMMING",
@@ -4114,7 +4128,7 @@ window.pyqPrep = [
   "n": 1,
   "y": "Oct/Nov 2023",
   "q": "Write the differences between For and While loop statements.",
-  "a": "The for loop and the while loop differ in the following ways.",
+  "a": "Differences between for and while loop statements in Python:\n1) Iteration: A for loop iterates over a sequence such as a list, string or range, while a while loop repeats as long as a condition is true.\n2) Number of repetitions: A for loop is used when the number of repetitions is known, while a while loop is used when it depends on a condition and is not known in advance.\n3) Control variable: In a for loop, the loop variable is updated automatically for each item, while in a while loop, the programmer must update the variable inside the loop, otherwise it becomes an infinite loop.\n4) Structure: A for loop has the form for variable in sequence:, while a while loop has the form while condition:",
   "tb": {
    "h": [
     "Basis of Difference",
@@ -4143,7 +4157,8 @@ window.pyqPrep = [
      "while condition"
     ]
    ]
-  }
+  },
+  "ti": "The for loop and the while loop differ in the following ways."
  },
  {
   "s": "PYTHON PROGRAMMING",
