@@ -2,6 +2,29 @@
 const { useState, useEffect, useRef } = React;
 const data = window.data;
 
+function PrepEntry({ entry }) {
+  const [open, setOpen] = React.useState(false);
+  return (
+    <div className="p-5 rounded-2xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 shadow-sm hover:shadow-md transition-shadow">
+      <div className="flex flex-wrap gap-2 mb-3">
+        <span className="text-xs font-bold tracking-wider text-brand dark:text-blue-400 uppercase bg-brand/10 px-2 py-1 rounded">{entry.c}</span>
+        <span className="text-xs font-bold bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300 px-2 py-1 rounded">Asked {entry.n} times</span>
+        <span className="text-xs font-bold bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 px-2 py-1 rounded">{entry.t === 'essay' ? 'Essay (10 marks)' : 'Short (3 marks)'}</span>
+      </div>
+      <h3 className="font-bold text-gray-900 dark:text-white text-base leading-snug">{entry.q}</h3>
+      <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">Asked in: {entry.y}</p>
+      <button onClick={() => setOpen(!open)} className="mt-4 flex items-center justify-center gap-2 w-full bg-brand text-white py-2.5 rounded-xl text-sm font-bold transition-transform active:scale-95 shadow-sm shadow-brand/20 hover:bg-brandDark">
+        <span className="material-symbols-outlined" style={{fontSize: '20px'}}>{open ? 'visibility_off' : 'visibility'}</span> {open ? 'Hide answer' : 'Show answer'}
+      </button>
+      {open && (
+        <div className="mt-4 pt-4 border-t border-gray-100 dark:border-gray-800 text-sm text-gray-700 dark:text-gray-200 leading-relaxed whitespace-pre-wrap space-y-3">
+          {entry.a.split('\n\n').map((para, i) => <p key={i}>{para}</p>)}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function App() {
   // Firebase Auth States
   const [user, setUser] = useState(null);
@@ -26,6 +49,9 @@ function App() {
   });
   const [searchQuery, setSearchQuery] = useState('');
   const [view, setView] = useState('home'); 
+  const [prepSubject, setPrepSubject] = useState('all');
+  const [prepType, setPrepType] = useState('all');
+  const [prepSearch, setPrepSearch] = useState('');
 
   // --- AI CHAT STATES ---
   const [isChatOpen, setIsChatOpen] = useState(false);
@@ -147,6 +173,22 @@ function App() {
   });
 
   const pinnedList = data.content.filter(sub => pinnedSubjects.includes(sub.id));
+
+  const prepSubjectList = [
+    { id: 'all', name: 'All subjects' },
+    { id: 'CM-501', name: 'IME' },
+    { id: 'CM-502', name: 'Big Data' },
+    { id: 'CM-503', name: 'Android' },
+    { id: 'CM-504', name: 'IoT' },
+    { id: 'CM-505', name: 'Python' },
+  ];
+  const filteredPrep = (window.pyqPrep || []).filter(e => {
+    const matchesSubject = prepSubject === 'all' || e.c === prepSubject;
+    const matchesType = prepType === 'all' || e.t === prepType;
+    const q = prepSearch.toLowerCase();
+    const matchesSearch = !q || e.q.toLowerCase().includes(q) || e.a.toLowerCase().includes(q);
+    return matchesSubject && matchesType && matchesSearch;
+  });
   const dateOptions = { weekday: 'long', day: 'numeric', month: 'long' };
   const todayString = new Date().toLocaleDateString('en-US', dateOptions);
 
@@ -252,6 +294,7 @@ function NotificationBanner() {
           <button onClick={() => { setView('home'); window.scrollTo(0,0); }} className={`px-5 py-2 text-sm font-bold rounded-lg transition-colors ${view === 'home' ? 'bg-white dark:bg-gray-700 shadow-sm text-brand dark:text-white' : 'text-gray-500 hover:text-gray-900 dark:hover:text-white'}`}>Home</button>
           <button onClick={() => { setView('notes'); window.scrollTo(0,0); }} className={`px-5 py-2 text-sm font-bold rounded-lg transition-colors ${view === 'notes' ? 'bg-white dark:bg-gray-700 shadow-sm text-brand dark:text-white' : 'text-gray-500 hover:text-gray-900 dark:hover:text-white'}`}>Study Notes</button>
           <button onClick={() => { setView('pyqs'); window.scrollTo(0,0); }} className={`px-5 py-2 text-sm font-bold rounded-lg transition-colors ${view === 'pyqs' ? 'bg-white dark:bg-gray-700 shadow-sm text-brand dark:text-white' : 'text-gray-500 hover:text-gray-900 dark:hover:text-white'}`}>Previous Papers</button>
+          <button onClick={() => { setView('prep'); window.scrollTo(0,0); }} className={`px-5 py-2 text-sm font-bold rounded-lg transition-colors ${view === 'prep' ? 'bg-white dark:bg-gray-700 shadow-sm text-brand dark:text-white' : 'text-gray-500 hover:text-gray-900 dark:hover:text-white'}`}>5th Sem Prep</button>
         </div>
 
         <button onClick={() => setDarkMode(!darkMode)} className="p-2 -mr-2 text-gray-600 dark:text-gray-300 transition-colors">
@@ -300,6 +343,11 @@ function NotificationBanner() {
               <div className="w-14 h-14 bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:bg-purple-600 group-hover:text-white transition-colors"><span className="material-symbols-outlined">history_edu</span></div>
               <div className="flex-1"><h3 className="font-bold text-lg text-gray-900 dark:text-white">Previous Papers</h3><p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">Past exams & question banks</p></div>
               <span className="material-symbols-outlined text-gray-300 dark:text-gray-600 group-hover:text-purple-600 transition-colors">chevron_right</span>
+            </button>
+            <button onClick={() => { setView('prep'); window.scrollTo(0,0); }} className="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-5 flex items-center gap-4 shadow-sm hover:shadow-md transition-all active:scale-95 text-left group">
+              <div className="w-14 h-14 bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:bg-green-600 group-hover:text-white transition-colors"><span className="material-symbols-outlined">quiz</span></div>
+              <div className="flex-1"><h3 className="font-bold text-lg text-gray-900 dark:text-white">5th Sem Prep</h3><p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">Repeated questions with answers</p></div>
+              <span className="material-symbols-outlined text-gray-300 dark:text-gray-600 group-hover:text-green-600 transition-colors">chevron_right</span>
             </button>
           </div>
           
@@ -383,6 +431,39 @@ function NotificationBanner() {
         </div>
       )}
 
+      {/* --- 5TH SEM PREP (Repeated questions with answers) --- */}
+      {view === 'prep' && (
+        <div className="flex-1 flex flex-col h-full bg-gray-50 dark:bg-gray-950">
+          <div className="px-4 md:px-8 py-3 border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-surface sticky top-0 z-20">
+            <div className="flex justify-between items-center mb-1 mt-2">
+              <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Prepare for 5th Sem</h1>
+            </div>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">CME • Repeated questions from Dec 2022 – Mar/Apr 2026 board papers, with answers. Tap "Show answer" to test yourself first.</p>
+            <div className="relative flex-1 mb-3">
+              <span className="material-symbols-outlined absolute left-3 top-2.5 text-gray-400" style={{fontSize: '20px'}}>search</span>
+              <input type="text" placeholder="Search questions or answers..." value={prepSearch} onChange={(e) => setPrepSearch(e.target.value)} className="w-full bg-gray-100 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 text-gray-900 dark:text-gray-100 rounded-xl py-2 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-brand" />
+            </div>
+            <div className="flex space-x-2 overflow-x-auto scrollbar-hide pb-2">
+              {prepSubjectList.map(s => (
+                <button key={s.id} onClick={() => setPrepSubject(s.id)} className={`px-4 py-1.5 rounded-full text-xs font-bold whitespace-nowrap transition-colors border ${prepSubject === s.id ? 'bg-gray-900 border-gray-900 text-white dark:bg-gray-100 dark:border-gray-100 dark:text-gray-900' : 'bg-white border-gray-200 text-gray-600 dark:bg-surface dark:border-gray-700 dark:text-gray-400 hover:bg-gray-50'}`}>{s.name}</button>
+              ))}
+            </div>
+            <div className="flex space-x-2 overflow-x-auto scrollbar-hide pb-2">
+              {[{id:'all',name:'All'},{id:'essay',name:'Essays'},{id:'short',name:'Shorts'}].map(t => (
+                <button key={t.id} onClick={() => setPrepType(t.id)} className={`px-4 py-1.5 rounded-full text-xs font-bold whitespace-nowrap transition-colors ${prepType === t.id ? 'bg-brand/10 text-brand dark:bg-brand/20 dark:text-blue-400' : 'bg-transparent text-gray-500 hover:bg-gray-200 dark:hover:bg-gray-800'}`}>{t.name}</button>
+              ))}
+            </div>
+          </div>
+          <main className="flex-1 p-4 md:p-8 space-y-4 overflow-y-auto">
+            {filteredPrep.length > 0 ? (
+              filteredPrep.map((entry, idx) => <PrepEntry key={idx} entry={entry} />)
+            ) : (
+              <div className="text-center py-12 text-gray-400 dark:text-gray-600 text-base">No questions match this selection. Note: Android and Big Data have no repeated questions in the papers analysed so far — try All subjects.</div>
+            )}
+          </main>
+        </div>
+      )}
+
       {/* --- AI CHAT FLOATING WIDGET --- */}
       {!isChatOpen && (
         <button onClick={() => setIsChatOpen(true)} className="fixed bottom-24 right-4 md:bottom-8 md:right-8 z-40 bg-brand hover:bg-brandDark text-white w-14 h-14 rounded-full shadow-[0_8px_30px_rgb(0,0,0,0.2)] flex items-center justify-center transition-transform hover:scale-110 active:scale-95">
@@ -451,6 +532,10 @@ function NotificationBanner() {
         <button onClick={() => { setView('pyqs'); window.scrollTo(0,0); }} className={`flex flex-col items-center p-3 w-full transition-colors ${view === 'pyqs' ? 'text-brand' : 'text-gray-400 hover:text-gray-900 dark:hover:text-white'}`}>
           <span className="material-symbols-outlined" style={{fontVariationSettings: view === 'pyqs' ? "'FILL' 1" : "'FILL' 0"}}>history_edu</span>
           <span className="text-[10px] font-bold mt-1">Papers</span>
+        </button>
+        <button onClick={() => { setView('prep'); window.scrollTo(0,0); }} className={`flex flex-col items-center p-3 w-full transition-colors ${view === 'prep' ? 'text-brand' : 'text-gray-400 hover:text-gray-900 dark:hover:text-white'}`}>
+          <span className="material-symbols-outlined" style={{fontVariationSettings: view === 'prep' ? "'FILL' 1" : "'FILL' 0"}}>quiz</span>
+          <span className="text-[10px] font-bold mt-1">Prep</span>
         </button>
       </nav>
     </div>
