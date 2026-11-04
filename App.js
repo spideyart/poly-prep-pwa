@@ -19,6 +19,7 @@ function PrepEntry({ entry }) {
       {open && (
         <div className="mt-4 pt-4 border-t border-gray-100 dark:border-gray-800 text-sm text-gray-700 dark:text-gray-200 leading-relaxed whitespace-pre-wrap space-y-3">
           {entry.a.split('\n\n').map((para, i) => <p key={i}>{para}</p>)}
+          {entry.d && (<div className="mt-2 overflow-x-auto" dangerouslySetInnerHTML={{ __html: entry.d }} />)}
         </div>
       )}
     </div>
