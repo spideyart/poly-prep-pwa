@@ -7,13 +7,13 @@ function PrepEntry({ entry }) {
   return (
     <div className="p-5 rounded-2xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 shadow-sm hover:shadow-md transition-shadow">
       <div className="flex flex-wrap gap-2 mb-3">
-        <span className="text-xs font-bold tracking-wider text-brand dark:text-gray-300 uppercase bg-brand/10 px-2 py-1 rounded">{entry.c}</span>
-        <span className="text-xs font-bold bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 px-2 py-1 rounded">{entry.n === 1 ? 'Asked 1 time' : 'Asked ' + entry.n + ' times'}</span>
+        <span className="text-xs font-bold tracking-wider text-brand dark:text-emerald-300 uppercase bg-brand/10 px-2 py-1 rounded">{entry.c}</span>
+        <span className="text-xs font-bold bg-emerald-100 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-300 px-2 py-1 rounded">{entry.n === 1 ? 'Asked 1 time' : 'Asked ' + entry.n + ' times'}</span>
         <span className="text-xs font-bold bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 px-2 py-1 rounded">{entry.t === 'essay' ? 'Essay (10 marks)' : 'Short (3 marks)'}</span>
       </div>
       <h3 className="font-bold text-gray-900 dark:text-white text-lg leading-snug">{entry.q}</h3>
       <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">Asked in: {entry.y}</p>
-      <button onClick={() => setOpen(!open)} className="mt-4 flex items-center justify-center gap-2 w-full bg-brand dark:bg-gray-100 text-white dark:text-gray-900 py-2.5 rounded-xl text-base font-bold transition-transform active:scale-95 shadow-sm shadow-brand/20 hover:bg-brandDark dark:hover:bg-white">
+      <button onClick={() => setOpen(!open)} className="mt-4 flex items-center justify-center gap-2 w-full bg-brand text-white py-2.5 rounded-xl text-base font-bold transition-transform active:scale-95 shadow-sm shadow-brand/20 hover:bg-brandDark">
         <span className="material-symbols-outlined" style={{fontSize: '20px'}}>{open ? 'visibility_off' : 'visibility'}</span> {open ? 'Hide answer' : 'Show answer'}
       </button>
       {open && (
@@ -26,7 +26,7 @@ function PrepEntry({ entry }) {
                   <thead>
                     <tr>
                       {entry.tb.h.map((h, i) => (
-                        <th key={i} className="border border-gray-300 dark:border-gray-600 bg-gray-200 dark:bg-gray-800 px-3 py-2 text-left font-bold text-gray-900 dark:text-white">{h}</th>
+                        <th key={i} className="border border-gray-300 dark:border-gray-600 bg-emerald-100 dark:bg-emerald-900/30 px-3 py-2 text-left font-bold text-gray-900 dark:text-white">{h}</th>
                       ))}
                     </tr>
                   </thead>
@@ -234,7 +234,7 @@ function App() {
         </div>
 
         <div className="text-center mb-10">
-          <div className="w-20 h-20 mx-auto bg-brand dark:bg-gray-100 text-white dark:text-gray-900 rounded-3xl flex items-center justify-center mb-6 shadow-lg shadow-brand/30">
+          <div className="w-20 h-20 mx-auto bg-brand text-white rounded-3xl flex items-center justify-center mb-6 shadow-lg shadow-brand/30">
             <span className="material-symbols-outlined" style={{fontSize: '40px'}}>auto_stories</span>
           </div>
           <h1 className="text-3xl font-extrabold text-gray-900 dark:text-white mb-2 tracking-tight">PolyPrep</h1>
@@ -262,7 +262,7 @@ function App() {
               <div className="flex justify-between items-center mb-1 ml-1 pr-1">
                 <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Password</label>
                 {authMode === 'login' && (
-                  <button type="button" onClick={handleForgotPassword} className="text-xs font-bold text-brand dark:text-gray-300 hover:underline">Forgot Password?</button>
+                  <button type="button" onClick={handleForgotPassword} className="text-xs font-bold text-brand dark:text-emerald-300 hover:underline">Forgot Password?</button>
                 )}
               </div>
               <div className="relative">
@@ -275,7 +275,7 @@ function App() {
             
             {authError && <div className="text-red-500 text-xs font-bold text-center mt-2 px-2 bg-red-50 dark:bg-red-900/20 py-2 rounded-lg">{authError}</div>}
 
-            <button type="submit" className="w-full bg-brand dark:bg-gray-100 text-white dark:text-gray-900 font-bold py-3.5 rounded-xl mt-6 shadow-lg shadow-brand/30 transition-transform active:scale-95">
+            <button type="submit" className="w-full bg-brand text-white font-bold py-3.5 rounded-xl mt-6 shadow-lg shadow-brand/30 transition-transform active:scale-95">
               {authMode === 'login' ? 'Sign In' : 'Create Account'}
             </button>
           </form>
@@ -285,8 +285,8 @@ function App() {
   }
 function NotificationBanner() {
   return (
-    <div className="w-full bg-gray-100 dark:bg-gray-800 border-b border-gray-300 dark:border-gray-700 overflow-hidden py-1.5 px-2 flex items-center text-xs sm:text-sm font-medium text-gray-900 dark:text-gray-200">
-      <span className="shrink-0 flex items-center gap-1 bg-gray-900 text-white text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full mr-3 shadow-xs">
+    <div className="w-full bg-emerald-50 dark:bg-emerald-950/50 border-b border-emerald-200 dark:border-emerald-900/60 overflow-hidden py-1.5 px-2 flex items-center text-xs sm:text-sm font-medium text-emerald-900 dark:text-emerald-200">
+      <span className="shrink-0 flex items-center gap-1 bg-emerald-600 text-white text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full mr-3 shadow-xs">
         <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
         Notice
       </span>
@@ -335,7 +335,7 @@ function NotificationBanner() {
           <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setIsDrawerOpen(false)}></div>
           <div className="relative w-4/5 max-w-[300px] bg-white dark:bg-surface h-full flex flex-col shadow-2xl transition-transform transform translate-x-0">
             <div className="p-6 pt-10 border-b border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-900">
-              <div className="w-16 h-16 bg-brand dark:bg-gray-100 text-white dark:text-gray-900 rounded-full flex items-center justify-center text-2xl font-bold mb-4 shadow-md">
+              <div className="w-16 h-16 bg-brand text-white rounded-full flex items-center justify-center text-2xl font-bold mb-4 shadow-md">
                 {user.displayName ? user.displayName.charAt(0).toUpperCase() : user.email.charAt(0).toUpperCase()}
               </div>
               <h2 className="font-bold text-lg leading-tight text-gray-900 dark:text-white">{user.displayName || 'PolyPrep User'}</h2>
@@ -362,9 +362,9 @@ function NotificationBanner() {
           
           <div className="grid gap-4 md:grid-cols-2">
             <button onClick={() => { setView('notes'); window.scrollTo(0,0); }} className="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-5 flex items-center gap-4 shadow-sm hover:shadow-md transition-all active:scale-95 text-left group">
-              <div className="w-14 h-14 bg-gray-100 dark:bg-gray-800 text-brand dark:text-gray-200 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:bg-brand dark:group-hover:bg-gray-100 group-hover:text-white dark:group-hover:text-gray-900 transition-colors"><span className="material-symbols-outlined">auto_stories</span></div>
+              <div className="w-14 h-14 bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-300 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:bg-emerald-600 dark:group-hover:bg-emerald-500 group-hover:text-white dark:group-hover:text-white transition-colors"><span className="material-symbols-outlined">auto_stories</span></div>
               <div className="flex-1"><h3 className="font-bold text-lg text-gray-900 dark:text-white">Syllabus Notes</h3><p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">Comprehensive study guides</p></div>
-              <span className="material-symbols-outlined text-gray-300 dark:text-gray-600 group-hover:text-brand dark:group-hover:text-gray-300 transition-colors">chevron_right</span>
+              <span className="material-symbols-outlined text-gray-300 dark:text-gray-600 group-hover:text-brand dark:group-hover:text-emerald-300 transition-colors">chevron_right</span>
             </button>
             <button onClick={() => { setView('pyqs'); window.scrollTo(0,0); }} className="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-5 flex items-center gap-4 shadow-sm hover:shadow-md transition-all active:scale-95 text-left group">
               <div className="w-14 h-14 bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:bg-purple-600 group-hover:text-white transition-colors"><span className="material-symbols-outlined">history_edu</span></div>
@@ -384,13 +384,13 @@ function NotificationBanner() {
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                 {pinnedList.map(subject => (
                   <div key={`pin-${subject.id}`} className="p-5 rounded-2xl bg-brand/5 dark:bg-brand/10 border border-brand/20 dark:border-brand/30 relative flex flex-col justify-between">
-                    <button onClick={() => togglePin(subject.id)} className="absolute top-4 right-4 text-brand dark:text-gray-300 p-1 transition-transform hover:scale-110"><span className="material-symbols-outlined text-[24px]" style={{fontVariationSettings: "'FILL' 1"}}>bookmark</span></button>
+                    <button onClick={() => togglePin(subject.id)} className="absolute top-4 right-4 text-brand dark:text-emerald-300 p-1 transition-transform hover:scale-110"><span className="material-symbols-outlined text-[24px]" style={{fontVariationSettings: "'FILL' 1"}}>bookmark</span></button>
                     <div className="pr-10 mb-6">
-                      <span className="text-xs font-bold tracking-wider text-brand dark:text-gray-300 uppercase bg-white dark:bg-surface px-2 py-1 rounded shadow-sm inline-block mb-3">{subject.code}</span>
+                      <span className="text-xs font-bold tracking-wider text-brand dark:text-emerald-300 uppercase bg-white dark:bg-surface px-2 py-1 rounded shadow-sm inline-block mb-3">{subject.code}</span>
                       <h3 className="font-bold text-gray-900 dark:text-white text-base leading-tight">{subject.name}</h3>
                     </div>
                     <div className="flex gap-2 mt-auto">
-                      <a href={subject.notesLink} target="_blank" rel="noopener noreferrer" className="flex-1 flex items-center justify-center gap-1 bg-brand dark:bg-gray-100 text-white dark:text-gray-900 py-2.5 rounded-xl text-sm font-bold shadow-sm shadow-brand/30 active:scale-95 transition-transform hover:bg-brandDark dark:hover:bg-white">Open Notes</a>
+                      <a href={subject.notesLink} target="_blank" rel="noopener noreferrer" className="flex-1 flex items-center justify-center gap-1 bg-brand text-white py-2.5 rounded-xl text-sm font-bold shadow-sm shadow-brand/30 active:scale-95 transition-transform hover:bg-brandDark">Open Notes</a>
                       <a href={subject.pyqLink} target="_blank" rel="noopener noreferrer" className="flex-1 flex items-center justify-center gap-1 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700 py-2.5 rounded-xl text-sm font-bold active:scale-95 transition-transform hover:bg-gray-50 dark:hover:bg-gray-700">PYQs</a>
                     </div>
                   </div>
@@ -425,7 +425,7 @@ function NotificationBanner() {
           <main className="flex-1 p-4 md:p-8 space-y-4 overflow-y-auto">
             <div className="flex space-x-2 overflow-x-auto pb-2 scrollbar-hide">
               {data.branches.map(branch => (
-                <button key={branch.id} onClick={() => { setActiveBranch(branch.id); setSearchQuery(''); }} className={`px-5 py-2 rounded-full text-xs font-bold transition-colors whitespace-nowrap ${activeBranch === branch.id ? 'bg-brand/10 text-brand dark:bg-brand/20 dark:text-gray-300' : 'bg-transparent text-gray-500 hover:bg-gray-200 dark:hover:bg-gray-800'}`}>{branch.short}</button>
+                <button key={branch.id} onClick={() => { setActiveBranch(branch.id); setSearchQuery(''); }} className={`px-5 py-2 rounded-full text-xs font-bold transition-colors whitespace-nowrap ${activeBranch === branch.id ? 'bg-brand/10 text-brand dark:bg-brand/20 dark:text-emerald-300' : 'bg-transparent text-gray-500 hover:bg-gray-200 dark:hover:bg-gray-800'}`}>{branch.short}</button>
               ))}
             </div>
             
@@ -440,10 +440,10 @@ function NotificationBanner() {
                           <h3 className="font-bold text-gray-900 dark:text-white text-base">{subject.name}</h3>
                           <span className="text-xs font-mono text-gray-500 dark:text-gray-400 mt-1 block">{subject.code}</span>
                         </div>
-                        <button onClick={() => togglePin(subject.id)} className={`absolute top-4 right-4 p-1 transition-transform hover:scale-110 ${isPinned ? 'text-brand dark:text-gray-300' : 'text-gray-300 dark:text-gray-700 hover:text-gray-400'}`}><span className="material-symbols-outlined" style={{fontVariationSettings: isPinned ? "'FILL' 1" : "'FILL' 0", fontSize: '26px'}}>bookmark</span></button>
+                        <button onClick={() => togglePin(subject.id)} className={`absolute top-4 right-4 p-1 transition-transform hover:scale-110 ${isPinned ? 'text-brand dark:text-emerald-300' : 'text-gray-300 dark:text-gray-700 hover:text-gray-400'}`}><span className="material-symbols-outlined" style={{fontVariationSettings: isPinned ? "'FILL' 1" : "'FILL' 0", fontSize: '26px'}}>bookmark</span></button>
                       </div>
                       {view === 'notes' ? (
-                        <a href={subject.notesLink} target="_blank" rel="noopener noreferrer" className="mt-auto flex items-center justify-center gap-2 w-full bg-brand dark:bg-gray-100 text-white dark:text-gray-900 py-3 rounded-xl text-sm font-bold transition-transform active:scale-95 shadow-sm shadow-brand/20 hover:bg-brandDark dark:hover:bg-white"><span className="material-symbols-outlined" style={{fontSize: '20px'}}>menu_book</span> Open PDF Notes</a>
+                        <a href={subject.notesLink} target="_blank" rel="noopener noreferrer" className="mt-auto flex items-center justify-center gap-2 w-full bg-brand text-white py-3 rounded-xl text-sm font-bold transition-transform active:scale-95 shadow-sm shadow-brand/20 hover:bg-brandDark"><span className="material-symbols-outlined" style={{fontSize: '20px'}}>menu_book</span> Open PDF Notes</a>
                       ) : (
                         <a href={subject.pyqLink} target="_blank" rel="noopener noreferrer" className="mt-auto flex items-center justify-center gap-2 w-full bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 py-3 rounded-xl text-sm font-bold transition-transform active:scale-95 shadow-sm hover:bg-gray-800 dark:hover:bg-white"><span className="material-symbols-outlined" style={{fontSize: '20px'}}>download</span> Download PYQs</a>
                       )}
@@ -477,7 +477,7 @@ function NotificationBanner() {
             </div>
             <div className="flex space-x-2 overflow-x-auto scrollbar-hide pb-2">
               {[{id:'all',name:'All'},{id:'essay',name:'Essays'},{id:'short',name:'Shorts'}].map(t => (
-                <button key={t.id} onClick={() => setPrepType(t.id)} className={`px-4 py-1.5 rounded-full text-xs font-bold whitespace-nowrap transition-colors ${prepType === t.id ? 'bg-brand/10 text-brand dark:bg-brand/20 dark:text-gray-300' : 'bg-transparent text-gray-500 hover:bg-gray-200 dark:hover:bg-gray-800'}`}>{t.name}</button>
+                <button key={t.id} onClick={() => setPrepType(t.id)} className={`px-4 py-1.5 rounded-full text-xs font-bold whitespace-nowrap transition-colors ${prepType === t.id ? 'bg-brand/10 text-brand dark:bg-brand/20 dark:text-emerald-300' : 'bg-transparent text-gray-500 hover:bg-gray-200 dark:hover:bg-gray-800'}`}>{t.name}</button>
               ))}
             </div>
           </div>
@@ -493,14 +493,14 @@ function NotificationBanner() {
 
       {/* --- AI CHAT FLOATING WIDGET --- */}
       {!isChatOpen && (
-        <button onClick={() => setIsChatOpen(true)} className="fixed bottom-24 right-4 md:bottom-8 md:right-8 z-40 bg-brand dark:bg-gray-100 hover:bg-brandDark dark:hover:bg-white dark:hover:bg-white text-white dark:text-gray-900 w-14 h-14 rounded-full shadow-[0_8px_30px_rgb(0,0,0,0.2)] flex items-center justify-center transition-transform hover:scale-110 active:scale-95">
+        <button onClick={() => setIsChatOpen(true)} className="fixed bottom-24 right-4 md:bottom-8 md:right-8 z-40 bg-brand hover:bg-brandDark text-white w-14 h-14 rounded-full shadow-[0_8px_30px_rgb(0,0,0,0.2)] flex items-center justify-center transition-transform hover:scale-110 active:scale-95">
           <span className="material-symbols-outlined" style={{fontSize: '28px'}}>smart_toy</span>
         </button>
       )}
 
       {isChatOpen && (
         <div className="fixed inset-x-4 bottom-24 md:inset-auto md:bottom-8 md:right-8 md:w-96 z-50 bg-white dark:bg-gray-900 rounded-3xl shadow-2xl border border-gray-200 dark:border-gray-700 flex flex-col h-[60vh] md:h-[500px] overflow-hidden">
-          <div className="bg-brand dark:bg-gray-100 text-white dark:text-gray-900 p-4 flex justify-between items-center shadow-md">
+          <div className="bg-brand text-white p-4 flex justify-between items-center shadow-md">
             <div className="flex items-center gap-2">
               <span className="material-symbols-outlined" style={{fontSize: '22px'}}>smart_toy</span>
               <h3 className="font-bold text-sm tracking-wide">PolyPrep AI Tutor</h3>
@@ -514,7 +514,7 @@ function NotificationBanner() {
             {messages.map((msg, idx) => (
               <div key={idx} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                 <div className={`max-w-[85%] p-3 text-sm rounded-2xl whitespace-pre-wrap ${msg.role === 'user' ? // ...rest of the code
- 'bg-brand dark:bg-gray-100 text-white dark:text-gray-900 rounded-tr-sm shadow-sm' : 'bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-100 dark:border-gray-700 shadow-sm rounded-tl-sm'}`}>
+ 'bg-brand text-white rounded-tr-sm shadow-sm' : 'bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-100 dark:border-gray-700 shadow-sm rounded-tl-sm'}`}>
                   {msg.text}
                 </div>
               </div>
@@ -539,7 +539,7 @@ function NotificationBanner() {
               placeholder="Ask a question..." 
               className="flex-1 bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand dark:text-white"
             />
-            <button type="submit" disabled={isTyping || !chatInput.trim()} className="bg-brand dark:bg-gray-100 text-white dark:text-gray-900 w-11 h-11 rounded-xl flex items-center justify-center disabled:opacity-50 transition-colors hover:bg-brandDark dark:hover:bg-white shadow-sm shadow-brand/20">
+            <button type="submit" disabled={isTyping || !chatInput.trim()} className="bg-brand text-white w-11 h-11 rounded-xl flex items-center justify-center disabled:opacity-50 transition-colors hover:bg-brandDark shadow-sm shadow-brand/20">
               <span className="material-symbols-outlined" style={{fontSize: '20px'}}>send</span>
             </button>
           </form>
